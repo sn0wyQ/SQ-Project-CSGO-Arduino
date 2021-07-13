@@ -1,0 +1,36 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-20.04
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Update packages list
+      run: sudo apt update
+      
+    - name: Install packages
+      run: sudo apt install cppcheck python3-pip -y
+      
+    - name: Install cpplint
+      run: pip3 install cpplint
+
+    - name: Run cppcheck (unused functions)
+      working-directory: ${{runner.workspace}}/${{github.event.repository.name}}
+      shell: bash
+      run: cppcheck --enable=unusedFunction --language=c++ $(find -name "*.h" -o -name "*.cpp")
+      continue-on-error: true
+
+    - name: Run cppcheck (warnings and preformance issues)
+      working-directory: ${{runner.workspace}}/${{github.event.repository.name}}
+      shell: bash
+      run: cppcheck --enable=warning,performance --language=c++ $(find -name "*.h" -o -name "*.cpp")
+      continue-on-error: true
+
+    - name: Run cpplint
+      working-directory: ${{runner.workspace}}/${{github.event.repository.name}}
+      shell: bash
+      run: $HOME/.local/bin/cpplint --filter=-legal/copyright,-build/include_subdir,-build/c++11,-build/include_order $(find -name "*.h" -o -name "*.cpp")
