@@ -51,7 +51,6 @@ void Loop(const Module& client) {
   EntityList entity_list(client);
 
   TriggerBot(local_player, entity_list);
-
 }
 
 int main() {

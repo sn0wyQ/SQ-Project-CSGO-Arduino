@@ -1,5 +1,5 @@
-#ifndef ENTITY_LIST_H_
-#define ENTITY_LIST_H_
+#ifndef PC_SDK_ENTITYLIST_ENTITY_LIST_H_
+#define PC_SDK_ENTITYLIST_ENTITY_LIST_H_
 
 #include "SDK/Entity/entity.h"
 
@@ -17,4 +17,4 @@ class EntityList {
   DWORD address_{0};
 };
 
-#endif  // ENTITY_LIST_H_
+#endif  // PC_SDK_ENTITYLIST_ENTITY_LIST_H_

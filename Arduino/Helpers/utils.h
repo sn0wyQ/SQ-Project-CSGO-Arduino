@@ -1,5 +1,5 @@
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef ARDUINO_HELPERS_UTILS_H_
+#define ARDUINO_HELPERS_UTILS_H_
 
 #include <Arduino.h>
 #include <EEPROM.h>
@@ -12,7 +12,7 @@
 namespace Utils {
 
 byte GetKeypadButton() {
-  static unsigned long prev_press = millis();
+  static unsigned int prev_press = millis();
   int adc_key_in = analogRead(0);
   if (millis() - prev_press > 250) {
     if (adc_key_in >= 800) {
@@ -120,6 +120,6 @@ void UpdateScreen() {
   }
 }
 
-}  // namespace Helpers
+}  // namespace Utils
 
-#endif  // UTILS_H_
+#endif  // ARDUINO_HELPERS_UTILS_H_

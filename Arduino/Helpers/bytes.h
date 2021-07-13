@@ -1,5 +1,5 @@
-#ifndef BYTES_H_
-#define BYTES_H_
+#ifndef ARDUINO_HELPERS_BYTES_H_
+#define ARDUINO_HELPERS_BYTES_H_
 
 #include <Arduino.h>
 
@@ -29,4 +29,4 @@ byte kHeart[8] = {
 
 }  // namespace Bytes
 
-#endif  // BYTES_H_
+#endif  // ARDUINO_HELPERS_BYTES_H_

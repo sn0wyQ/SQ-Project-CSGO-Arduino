@@ -1,5 +1,5 @@
-#ifndef LOCAL_PLAYER_H_
-#define LOCAL_PLAYER_H_
+#ifndef PC_SDK_ENTITY_LOCALPLAYER_LOCAL_PLAYER_H_
+#define PC_SDK_ENTITY_LOCALPLAYER_LOCAL_PLAYER_H_
 
 #include "SDK/Entity/entity.h"
 
@@ -13,4 +13,4 @@ class LocalPlayer : public Entity {
   int GetCrosshairId() const;
 };
 
-#endif  // LOCAL_PLAYER_H_
+#endif  // PC_SDK_ENTITY_LOCALPLAYER_LOCAL_PLAYER_H_

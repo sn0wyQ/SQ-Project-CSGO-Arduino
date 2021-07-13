@@ -1,5 +1,5 @@
-#ifndef ARRAYS_H_
-#define ARRAYS_H_
+#ifndef PC_ARRAYS_ARRAYS_H_
+#define PC_ARRAYS_ARRAYS_H_
 
 #include <Windows.h>
 
@@ -12,4 +12,4 @@ extern const std::unordered_map<int, std::string> kKeyNames;
 
 }  // namespace Arrays
 
-#endif  // ARRAYS_H_
+#endif  // PC_ARRAYS_ARRAYS_H_

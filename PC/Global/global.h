@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H_
-#define GLOBAL_H_
+#ifndef PC_GLOBAL_GLOBAL_H_
+#define PC_GLOBAL_GLOBAL_H_
 
 #include <cstdint>
 
@@ -11,4 +11,4 @@ extern int bhop_button;
 
 }  // namespace Global
 
-#endif  // GLOBAL_H_
+#endif  // PC_GLOBAL_GLOBAL_H_

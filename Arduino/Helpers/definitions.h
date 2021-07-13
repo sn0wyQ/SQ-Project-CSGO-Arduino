@@ -1,5 +1,5 @@
-#ifndef DEFINITIONS_H_
-#define DEFINITIONS_H_
+#ifndef ARDUINO_HELPERS_DEFINITIONS_H_
+#define ARDUINO_HELPERS_DEFINITIONS_H_
 
 // LCD Interface Pins
 #define LCD_PIN_RS 8
@@ -45,9 +45,9 @@
 #define BHOP_BTN_MAX      3
 
 // Settings addresses
-#define BHOP_BTN_ADDR 0 // (size - 1 byte)
+#define BHOP_BTN_ADDR 0  // (size - 1 byte)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127
 
-#endif  // DEFINITIONS_H_
+#endif  // ARDUINO_HELPERS_DEFINITIONS_H_

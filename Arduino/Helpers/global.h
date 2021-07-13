@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H_
-#define GLOBAL_H_
+#ifndef ARDUINO_HELPERS_GLOBAL_H_
+#define ARDUINO_HELPERS_GLOBAL_H_
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
@@ -23,4 +23,4 @@ byte bhop_button = BHOP_OFF;
 
 }  // namespace Global
 
-#endif  // GLOBAL_H_
+#endif  // ARDUINO_HELPERS_GLOBAL_H_

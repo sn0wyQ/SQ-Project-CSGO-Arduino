@@ -1,5 +1,5 @@
-#ifndef MEMORY_H_
-#define MEMORY_H_
+#ifndef PC_MEMORY_MEMORY_H_
+#define PC_MEMORY_MEMORY_H_
 
 #include <Windows.h>
 #include <TlHelp32.h>
@@ -60,4 +60,4 @@ class Memory {
   static Memory* memory_;
 };
 
-#endif  // MEMORY_H_
+#endif  // PC_MEMORY_MEMORY_H_

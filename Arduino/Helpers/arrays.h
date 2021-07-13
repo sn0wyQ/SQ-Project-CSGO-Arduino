@@ -1,5 +1,5 @@
-#ifndef ARRAYS_H_
-#define ARRAYS_H_
+#ifndef ARDUINO_HELPERS_ARRAYS_H_
+#define ARDUINO_HELPERS_ARRAYS_H_
 
 #include <Arduino.h>
 
@@ -18,4 +18,4 @@ const String kBhopBtns[] {
 
 }  // namespace Arrays
 
-#endif  // ARRAYS_H_
+#endif  // ARDUINO_HELPERS_ARRAYS_H_

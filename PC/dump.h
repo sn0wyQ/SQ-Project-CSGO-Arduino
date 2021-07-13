@@ -1,5 +1,5 @@
-#ifndef DUMP_H_
-#define DUMP_H_
+#ifndef PC_DUMP_H_
+#define PC_DUMP_H_
 
 #include <cstdint>
 
@@ -102,7 +102,7 @@ constexpr ptrdiff_t m_vecViewOffset = 0x108;
 constexpr ptrdiff_t m_viewPunchAngle = 0x3020;
 constexpr ptrdiff_t m_zoomLevel = 0x33D0;
 
-} // namespace NetVars
+}  // namespace NetVars
 
 namespace Signatures {
 
@@ -166,4 +166,4 @@ constexpr ptrdiff_t set_abs_origin = 0x1E0900;
 
 }  // namespace Signatures
 
-#endif  // DUMP_H_
+#endif  // PC_DUMP_H_

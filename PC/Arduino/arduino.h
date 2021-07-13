@@ -1,5 +1,5 @@
-#ifndef ARDUINO_H_
-#define ARDUINO_H_
+#ifndef PC_ARDUINO_ARDUINO_H_
+#define PC_ARDUINO_ARDUINO_H_
 
 #pragma comment(lib, "Setupapi.lib")
 
@@ -33,4 +33,4 @@ class Arduino {
   static HANDLE arduino_handle_;
 };
 
-#endif  // ARDUINO_H_
+#endif  // PC_ARDUINO_ARDUINO_H_

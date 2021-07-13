@@ -1,5 +1,5 @@
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef PC_UTILS_UTILS_H_
+#define PC_UTILS_UTILS_H_
 
 #include <iostream>
 
@@ -28,4 +28,4 @@ bool IsHeld(int key_code);
 
 }  // namespace Utils
 
-#endif  // UTILS_H_
+#endif  // PC_UTILS_UTILS_H_

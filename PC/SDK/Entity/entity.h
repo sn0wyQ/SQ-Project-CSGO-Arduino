@@ -1,5 +1,5 @@
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#ifndef PC_SDK_ENTITY_ENTITY_H_
+#define PC_SDK_ENTITY_ENTITY_H_
 
 #include "Memory/memory.h"
 #include "dump.h"
@@ -42,4 +42,4 @@ class Entity {
   DWORD address_{0};
 };
 
-#endif  // PLAYER_H
+#endif  // PC_SDK_ENTITY_ENTITY_H_
