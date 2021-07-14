@@ -44,9 +44,28 @@ void Load(int address, T* data) {
   EEPROM.get(address, *data);
 }
 
+void Error(char error_code) {
+  if (Serial.availableForWrite()) {
+    Serial.write(error_code);
+  }
+}
+
+void StartBlinking(uint8_t col, uint8_t row) {
+  Global::is_blinking = true;
+  Global::blink_col = col;
+  Global::blink_row = row;
+  Global::need_to_update_screen = true;
+}
+
+void StopBlinking() {
+  Global::is_blinking = false;
+  Global::need_to_update_screen = true;
+}
+
 inline void UpdateScreen() {
   Global::need_to_update_screen = false;
   Global::lcd_screen.clear();
+
   switch (Global::menu_page) {
     case MENU_PAGE_WH: {
       switch (Global::wh_mode) {
@@ -118,6 +137,13 @@ inline void UpdateScreen() {
       break;
     }
   }
+
+  if (Global::is_blinking) {
+    Global::lcd_screen.setCursor(Global::blink_col, Global::blink_col);
+    Global::lcd_screen.blink();
+  } else {
+    Global::lcd_screen.noBlink();
+  }
 }
 
 inline void OnKpRightClicked() {
@@ -156,6 +182,7 @@ inline void OnKpUpClicked() {
       break;
     }
   }
+  Global::need_to_update_screen = true;
 }
 
 inline void OnKpDownClicked() {
@@ -186,6 +213,7 @@ inline void OnKpDownClicked() {
       break;
     }
   }
+  Global::need_to_update_screen = true;
 }
 
 inline void OnKpLeftClicked() {
@@ -195,6 +223,7 @@ inline void OnKpLeftClicked() {
     } else {
       --Global::menu_page;
     }
+    Global::need_to_update_screen = true;
   }
 }
 
@@ -211,10 +240,9 @@ inline void OnKpSelectClicked() {
     case MENU_PAGE_BHOP: {
       Global::is_anything_selected = !Global::is_anything_selected;
       if (Global::is_anything_selected) {
-        Global::lcd_screen.setCursor(10, 1);
-        Global::lcd_screen.blink();
+        Utils::StartBlinking(10, 1);
       } else {
-        Global::lcd_screen.noBlink();
+        Utils::StopBlinking();
       }
       break;
     }
@@ -224,6 +252,7 @@ inline void OnKpSelectClicked() {
       break;
     }
   }
+  Global::need_to_update_screen = true;
 }
 
 }  // namespace Utils

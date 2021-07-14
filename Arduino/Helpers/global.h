@@ -14,6 +14,10 @@ LiquidCrystal lcd_screen
 bool is_anything_selected = false;
 bool need_to_update_screen = false;
 
+bool is_blinking = false;
+uint8_t blink_col = 0;
+uint8_t blink_row = 0;
+
 byte menu_page = MENU_PAGE_WH;
 
 byte wh_mode = WH_MODE_NEAREST;

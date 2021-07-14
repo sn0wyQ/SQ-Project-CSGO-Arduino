@@ -17,12 +17,17 @@
 #define CMD_SHOOT   1
 #define CMD_MAX     2
 
+// Error codes
+#define ER_UNKNOWN_CMD 0
+
 class Arduino {
  public:
   static void Connect(LPCSTR com_port);
 
   static bool SendCommand(char cmd_index, const std::vector<char>& params = {});
   static bool SendData(const char* data, SIZE_T data_size);
+
+  static bool ReadByte(char* byte);
 
   static bool GetDevice(LPCSTR friendly_name, LPSTR com_port);
 

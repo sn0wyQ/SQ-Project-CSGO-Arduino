@@ -21,6 +21,9 @@
 #define CMD_JUMP    0
 #define CMD_SHOOT   1
 
+// Error codes
+#define ER_UNKNOWN_CMD 0
+
 // Menu pages
 #define MENU_PAGE_WH       0
 #define MENU_PAGE_BHOP     1

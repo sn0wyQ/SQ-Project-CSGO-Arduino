@@ -37,9 +37,8 @@ void loop() {
         break;
       }
 
-
       default: {
-        // TODO(sn0wyQ): Display some error
+        Utils::Error(ER_UNKNOWN_CMD);
         break;
       }
     }
@@ -76,11 +75,6 @@ void loop() {
 
     case KP_SELECT: {
       Utils::OnKpSelectClicked();
-      break;
-    }
-
-    default: {
-      // TODO(sn0wyQ): Display some error
       break;
     }
   }

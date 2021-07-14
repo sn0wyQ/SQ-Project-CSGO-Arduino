@@ -37,11 +37,11 @@ void Arduino::Connect(LPCSTR com_port) {
   }
 
   COMMTIMEOUTS cto = {};
-  cto.ReadIntervalTimeout = 5;
-  cto.ReadTotalTimeoutConstant = 5;
-  cto.ReadTotalTimeoutMultiplier = 10;
-  cto.WriteTotalTimeoutConstant = 5;
-  cto.WriteTotalTimeoutMultiplier = 10;
+  cto.ReadIntervalTimeout = 2;
+  cto.ReadTotalTimeoutConstant = 2;
+  cto.ReadTotalTimeoutMultiplier = 5;
+  cto.WriteTotalTimeoutConstant = 2;
+  cto.WriteTotalTimeoutMultiplier = 5;
   if (!SetCommTimeouts(arduino_handle_, &cto)) {
     DWORD last_error = ::GetLastError();
     Utils::Log("[ARDUINO] Error #% during SetCommTimeouts", last_error);
@@ -53,6 +53,35 @@ void Arduino::Connect(LPCSTR com_port) {
 
 Arduino::~Arduino() {
   CloseHandle(arduino_handle_);
+}
+
+bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {
+  if (cmd_index >= CMD_MAX) {
+    Utils::Log("[ARDUINO] Error: Trying to send unknown command (index %)"
+               "to Arduino", cmd_index);
+    return false;
+  }
+
+  std::string cmd(params.size() + 1, cmd_index);
+  for (int i = 0; i < params.size(); ++i) {
+    cmd.at(i + 1) = params.at(i);
+  }
+
+  return SendData(cmd.c_str(), cmd.length() + 1);
+}
+
+bool Arduino::SendData(const char* data, SIZE_T data_size) {
+  DWORD bytes_written = 0;
+  return WriteFile(arduino_handle_, data, data_size, &bytes_written, nullptr);
+}
+
+bool Arduino::ReadByte(char* byte) {
+  DWORD bytes_read;
+  return ReadFile(arduino_handle_,
+                  byte,
+                  1,
+                  &bytes_read,
+                  nullptr);
 }
 
 bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
@@ -95,23 +124,4 @@ bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
   }
 
   return false;
-}
-
-bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {
-  if (cmd_index >= CMD_MAX) {
-    Utils::Log("Trying to send unknown command (index %)", cmd_index);
-    return false;
-  }
-
-  std::string cmd(params.size() + 1, cmd_index);
-  for (int i = 0; i < params.size(); ++i) {
-    cmd.at(i + 1) = params.at(i);
-  }
-
-  return SendData(cmd.c_str(), cmd.length() + 1);
-}
-
-bool Arduino::SendData(const char* data, SIZE_T data_size) {
-  DWORD bytes_written = 0;
-  return WriteFile(arduino_handle_, data, data_size, &bytes_written, nullptr);
 }
