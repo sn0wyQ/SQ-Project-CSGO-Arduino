@@ -10,6 +10,24 @@
 #include "Utils/utils.h"
 #include "dump.h"
 
+void CheckArduinoOutput() {
+  char output;
+  if (Arduino::ReadByte(&output)) {
+    switch (output) {
+      case ER_UNKNOWN_CMD: {
+        Utils::Log("[ARDUINO] Internal Error: unknown command");
+        break;
+      }
+
+      default: {
+        Utils::Log("[ARDUINO] Error: Output \"%\" can not be recognized as "
+                   "a command", output);
+        break;
+      }
+    }
+  }
+}
+
 void BunnyHop(const LocalPlayer& local_player) {
   if (!Utils::IsHeld(Global::bhop_button)) {
     return;
@@ -24,7 +42,9 @@ void BunnyHop(const LocalPlayer& local_player) {
 
 void TriggerBot(const LocalPlayer& local_player,
                 const EntityList& entity_list) {
-  // TODO(sn0wyQ): return if trigger bot is not active
+  if (!Utils::IsHeld(Global::trigger_bot_button)) {
+    return;
+  }
 
   int target_entity_index = local_player.GetCrosshairId();
   if (!EntityList::CanBeEntity(target_entity_index)) {
@@ -37,10 +57,12 @@ void TriggerBot(const LocalPlayer& local_player,
     return;
   }
 
-  // TODO(sn0wyQ): add Arduino::SendCommand(CMD_SHOOT);
+  Arduino::SendCommand(CMD_SHOOT);
 }
 
 void Loop(const Module& client) {
+  CheckArduinoOutput();
+
   LocalPlayer local_player(client);
   if (!local_player.IsAlive()) {
     return;
@@ -90,6 +112,9 @@ int main() {
   Utils::Log("\tBase: %\n\tSize: %\n", client.base, client.size);
 
   Utils::GetKey(&Global::bhop_button, "Bunny Hop");
+  Utils::GetKey(&Global::trigger_bot_button, "Trigger Bot");
+
+  Utils::Log("Cheat started successfully!\n");
 
   while (true) {
     Loop(client);
@@ -97,6 +122,7 @@ int main() {
   }
 
   Memory::Detach();
+  system("pause");
 
   return 0;
 }

@@ -13,9 +13,12 @@
 #include "Utils/utils.h"
 
 // Commands
-#define CMD_JUMP    0
-#define CMD_SHOOT   1
-#define CMD_MAX     2
+#define CMD_JUMP    1
+#define CMD_SHOOT   2
+#define CMD_MAX     3
+
+// Error codes
+#define ER_UNKNOWN_CMD 1
 
 class Arduino {
  public:
@@ -23,6 +26,8 @@ class Arduino {
 
   static bool SendCommand(char cmd_index, const std::vector<char>& params = {});
   static bool SendData(const char* data, SIZE_T data_size);
+
+  static bool ReadByte(char* byte);
 
   static bool GetDevice(LPCSTR friendly_name, LPSTR com_port);
 

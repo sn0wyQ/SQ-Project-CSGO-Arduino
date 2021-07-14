@@ -12,7 +12,7 @@ void Arduino::Connect(LPCSTR com_port) {
                                nullptr);
   if (!arduino_handle_) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during CreateFile", last_error);
+    Utils::Log("[ARDUINO] Error #% during CreateFile\n", last_error);
     return;
   }
 
@@ -21,7 +21,7 @@ void Arduino::Connect(LPCSTR com_port) {
   dcb.DCBlength = sizeof(dcb);
   if (!GetCommState(arduino_handle_, &dcb)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during GetCommState", last_error);
+    Utils::Log("[ARDUINO] Error #% during GetCommState\n", last_error);
     return;
   }
 
@@ -32,27 +32,57 @@ void Arduino::Connect(LPCSTR com_port) {
 
   if (!SetCommState(arduino_handle_, &dcb)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during SetCommState", last_error);
+    Utils::Log("[ARDUINO] Error #% during SetCommState\n", last_error);
     return;
   }
 
   COMMTIMEOUTS cto = {};
-  cto.ReadIntervalTimeout = 5;
-  cto.ReadTotalTimeoutConstant = 5;
-  cto.ReadTotalTimeoutMultiplier = 10;
-  cto.WriteTotalTimeoutConstant = 5;
-  cto.WriteTotalTimeoutMultiplier = 10;
+  cto.ReadIntervalTimeout = 2;
+  cto.ReadTotalTimeoutConstant = 2;
+  cto.ReadTotalTimeoutMultiplier = 5;
+  cto.WriteTotalTimeoutConstant = 2;
+  cto.WriteTotalTimeoutMultiplier = 5;
   if (!SetCommTimeouts(arduino_handle_, &cto)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during SetCommTimeouts", last_error);
+    Utils::Log("[ARDUINO] Error #% during SetCommTimeouts\n", last_error);
     return;
   }
 
-  Utils::Log("[ARDUINO] Connected to Arduino Leonardo at %", com_port);
+  Utils::Log("[ARDUINO] Connected to Arduino Leonardo at %\n", com_port);
 }
 
 Arduino::~Arduino() {
   CloseHandle(arduino_handle_);
+}
+
+bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {
+  if (cmd_index >= CMD_MAX) {
+    Utils::Log("[ARDUINO] Error: Trying to send unknown command (index %)"
+               "to Arduino", cmd_index);
+    return false;
+  }
+
+  std::string cmd(params.size() + 1, cmd_index);
+  for (int i = 0; i < params.size(); ++i) {
+    cmd.at(i + 1) = params.at(i);
+  }
+
+  return SendData(cmd.c_str(), cmd.length());
+}
+
+bool Arduino::SendData(const char* data, SIZE_T data_size) {
+  DWORD bytes_written = 0;
+  return WriteFile(arduino_handle_, data, data_size, &bytes_written, nullptr);
+}
+
+bool Arduino::ReadByte(char* byte) {
+  DWORD bytes_read;
+  ReadFile(arduino_handle_,
+           byte,
+           1,
+           &bytes_read,
+           nullptr);
+  return (bytes_read == 1);
 }
 
 bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
@@ -95,23 +125,4 @@ bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
   }
 
   return false;
-}
-
-bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {
-  if (cmd_index >= CMD_MAX) {
-    Utils::Log("Trying to send unknown command (index %)", cmd_index);
-    return false;
-  }
-
-  std::string cmd(params.size() + 1, cmd_index);
-  for (int i = 0; i < params.size(); ++i) {
-    cmd.at(i + 1) = params.at(i);
-  }
-
-  return SendData(cmd.c_str(), cmd.length() + 1);
-}
-
-bool Arduino::SendData(const char* data, SIZE_T data_size) {
-  DWORD bytes_written = 0;
-  return WriteFile(arduino_handle_, data, data_size, &bytes_written, nullptr);
 }

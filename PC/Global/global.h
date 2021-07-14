@@ -8,6 +8,7 @@
 namespace Global {
 
 extern int bhop_button;
+extern int trigger_bot_button;
 
 }  // namespace Global
 
