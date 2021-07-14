@@ -17,19 +17,34 @@
 #define KP_SELECT 4
 #define KP_NONE   5
 
+// Icons
+// -- WallHack page
+#define ICON_WALL         byte(0)
+#define ICON_LOCK_CLOSED  byte(1)
+#define ICON_LOCK_OPENED  byte(2)
+#define ICON_HEART        byte(3)
+#define ICON_C4           byte(4)
+#define ICON_KIT          byte(5)
+#define ICON_VEST         byte(6)
+#define ICON_VEST_HELM    byte(7)
+// -- BunnyHop page
+// #define ICON_WALL      byte(0)
+// -- TriggerBot page
+// #define ICON_WALL      byte(0)
+
 // Commands
-#define CMD_JUMP    0
-#define CMD_SHOOT   1
+#define CMD_JUMP    1
+#define CMD_SHOOT   2
 
 // Error codes
-#define ER_UNKNOWN_CMD 0
+#define ER_UNKNOWN_CMD 1
 
 // Menu pages
 #define MENU_PAGE_WH       0
 #define MENU_PAGE_BHOP     1
 #define MENU_PAGE_TRIGGER  2
-#define MENU_PAGE_AIM      3
-#define MENU_PAGE_MAX      4
+#define MENU_PAGE_MAX      3
+#define MENU_PAGE_AIM      // Not ready yet
 
 // WallHack modes
 #define WH_MODE_NEAREST 0
@@ -47,8 +62,22 @@
 #define BHOP_BTN_MWHUP    2
 #define BHOP_BTN_MAX      3
 
+// TriggerBot pages
+#define TRIGGER_PAGE_STATE  0
+#define TRIGGER_PAGE_DELAY  1
+#define TRIGGER_PAGE_MAX    2
+
+// TriggerBot states
+#define TRIGGER_OFF 0
+#define TRIGGER_ON  1
+#define TRIGGER_MAX 2
+
+#define TRIGGER_MAX_DELAY 999
+
 // Settings addresses
-#define BHOP_BTN_ADDR 0  // (size - 1 byte)
+#define BHOP_BTN_ADDR       0  // (size - 1 byte)
+#define TRIGGER_STATE_ADDR  1  // (size - 1 byte)
+#define TRIGGER_DELAY_ADDR  2  // (size - 4 bytes)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127

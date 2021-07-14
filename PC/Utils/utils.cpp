@@ -16,6 +16,7 @@ void Utils::GetKey(int* final_key_code, const char* purpose) {
     if (answer == 'y' || answer == 'Y') {
       *final_key_code = key_code;
     }
+    std::cout << std::endl;
   }
 }
 

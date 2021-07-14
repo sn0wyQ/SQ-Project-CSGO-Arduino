@@ -42,7 +42,9 @@ void BunnyHop(const LocalPlayer& local_player) {
 
 void TriggerBot(const LocalPlayer& local_player,
                 const EntityList& entity_list) {
-  // TODO(sn0wyQ): return if trigger bot is not active
+  if (!Utils::IsHeld(Global::trigger_bot_button)) {
+    return;
+  }
 
   int target_entity_index = local_player.GetCrosshairId();
   if (!EntityList::CanBeEntity(target_entity_index)) {
@@ -55,7 +57,7 @@ void TriggerBot(const LocalPlayer& local_player,
     return;
   }
 
-  // TODO(sn0wyQ): add Arduino::SendCommand(CMD_SHOOT);
+  Arduino::SendCommand(CMD_SHOOT);
 }
 
 void Loop(const Module& client) {
@@ -110,6 +112,9 @@ int main() {
   Utils::Log("\tBase: %\n\tSize: %\n", client.base, client.size);
 
   Utils::GetKey(&Global::bhop_button, "Bunny Hop");
+  Utils::GetKey(&Global::trigger_bot_button, "Trigger Bot");
+
+  Utils::Log("Cheat started successfully!\n");
 
   while (true) {
     Loop(client);
@@ -117,6 +122,7 @@ int main() {
   }
 
   Memory::Detach();
+  system("pause");
 
   return 0;
 }

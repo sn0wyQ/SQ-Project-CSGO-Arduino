@@ -12,7 +12,7 @@ void Arduino::Connect(LPCSTR com_port) {
                                nullptr);
   if (!arduino_handle_) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during CreateFile", last_error);
+    Utils::Log("[ARDUINO] Error #% during CreateFile\n", last_error);
     return;
   }
 
@@ -21,7 +21,7 @@ void Arduino::Connect(LPCSTR com_port) {
   dcb.DCBlength = sizeof(dcb);
   if (!GetCommState(arduino_handle_, &dcb)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during GetCommState", last_error);
+    Utils::Log("[ARDUINO] Error #% during GetCommState\n", last_error);
     return;
   }
 
@@ -32,7 +32,7 @@ void Arduino::Connect(LPCSTR com_port) {
 
   if (!SetCommState(arduino_handle_, &dcb)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during SetCommState", last_error);
+    Utils::Log("[ARDUINO] Error #% during SetCommState\n", last_error);
     return;
   }
 
@@ -44,11 +44,11 @@ void Arduino::Connect(LPCSTR com_port) {
   cto.WriteTotalTimeoutMultiplier = 5;
   if (!SetCommTimeouts(arduino_handle_, &cto)) {
     DWORD last_error = ::GetLastError();
-    Utils::Log("[ARDUINO] Error #% during SetCommTimeouts", last_error);
+    Utils::Log("[ARDUINO] Error #% during SetCommTimeouts\n", last_error);
     return;
   }
 
-  Utils::Log("[ARDUINO] Connected to Arduino Leonardo at %", com_port);
+  Utils::Log("[ARDUINO] Connected to Arduino Leonardo at %\n", com_port);
 }
 
 Arduino::~Arduino() {
@@ -67,7 +67,7 @@ bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {
     cmd.at(i + 1) = params.at(i);
   }
 
-  return SendData(cmd.c_str(), cmd.length() + 1);
+  return SendData(cmd.c_str(), cmd.length());
 }
 
 bool Arduino::SendData(const char* data, SIZE_T data_size) {
@@ -77,11 +77,12 @@ bool Arduino::SendData(const char* data, SIZE_T data_size) {
 
 bool Arduino::ReadByte(char* byte) {
   DWORD bytes_read;
-  return ReadFile(arduino_handle_,
-                  byte,
-                  1,
-                  &bytes_read,
-                  nullptr);
+  ReadFile(arduino_handle_,
+           byte,
+           1,
+           &bytes_read,
+           nullptr);
+  return (bytes_read == 1);
 }
 
 bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {

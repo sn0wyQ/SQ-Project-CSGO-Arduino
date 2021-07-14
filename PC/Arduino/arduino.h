@@ -13,12 +13,12 @@
 #include "Utils/utils.h"
 
 // Commands
-#define CMD_JUMP    0
-#define CMD_SHOOT   1
-#define CMD_MAX     2
+#define CMD_JUMP    1
+#define CMD_SHOOT   2
+#define CMD_MAX     3
 
 // Error codes
-#define ER_UNKNOWN_CMD 0
+#define ER_UNKNOWN_CMD 1
 
 class Arduino {
  public:

@@ -12,11 +12,15 @@ void setup() {
   Serial.begin(128000);
 
   Global::lcd_screen.begin(16, 2);
+  Global::lcd_screen.clear();
+  Utils::LoadIcons();
 
   Mouse.begin();
   Keyboard.begin();
 
   Utils::Load(BHOP_BTN_ADDR, &Global::bhop_button);
+  Utils::Load(TRIGGER_STATE_ADDR, &Global::trigger_bot_state);
+  Utils::Load(TRIGGER_DELAY_ADDR, &Global::trigger_bot_delay);
 }
 
 void loop() {
@@ -33,7 +37,15 @@ void loop() {
       }
 
       case CMD_SHOOT: {
-        Mouse.click(MOUSE_LEFT);
+        if (Global::trigger_bot_state == TRIGGER_ON) {
+          if (!Global::trigger_bot_delay) {
+            Mouse.click(MOUSE_LEFT);
+          } else {
+            if (!Global::trigger_bot_delay_start) {
+              Global::trigger_bot_delay_start = millis();
+            }
+          }
+        }
         break;
       }
 
@@ -42,6 +54,13 @@ void loop() {
         break;
       }
     }
+  }
+
+  if (Global::trigger_bot_delay_start
+      && (millis() - Global::trigger_bot_delay_start)
+         > Global::trigger_bot_delay) {
+    Mouse.click(MOUSE_LEFT);
+    Global::trigger_bot_delay_start = 0;
   }
 
   if (Global::need_to_update_screen) {
