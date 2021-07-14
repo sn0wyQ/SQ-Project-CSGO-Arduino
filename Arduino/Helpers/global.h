@@ -12,6 +12,7 @@ LiquidCrystal lcd_screen
     (LCD_PIN_RS, LCD_PIN_EN, LCD_PIN_D4, LCD_PIN_D5, LCD_PIN_D6, LCD_PIN_D7);
 
 bool is_anything_selected = false;
+bool need_to_update_screen = false;
 
 byte menu_page = MENU_PAGE_WH;
 

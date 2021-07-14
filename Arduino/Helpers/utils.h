@@ -11,7 +11,7 @@
 
 namespace Utils {
 
-byte GetKeypadButton() {
+inline byte GetKeypadButton() {
   static unsigned int prev_press = millis();
   int adc_key_in = analogRead(0);
   if (millis() - prev_press > 250) {
@@ -44,7 +44,8 @@ void Load(int address, T* data) {
   EEPROM.get(address, *data);
 }
 
-void UpdateScreen() {
+inline void UpdateScreen() {
+  Global::need_to_update_screen = false;
   Global::lcd_screen.clear();
   switch (Global::menu_page) {
     case MENU_PAGE_WH: {
@@ -96,7 +97,6 @@ void UpdateScreen() {
           break;
         }
       }
-
       break;
     }
 
@@ -110,6 +110,112 @@ void UpdateScreen() {
         Global::lcd_screen.write(' ');
       }
       Global::lcd_screen.print(Arrays::kBhopBtns[Global::bhop_button]);
+      break;
+    }
+
+    default: {
+      // TODO(sn0wyQ): Display some error
+      break;
+    }
+  }
+}
+
+inline void OnKpRightClicked() {
+  if (!Global::is_anything_selected) {
+    ++Global::menu_page;
+    if (Global::menu_page >= MENU_PAGE_MAX) {
+      Global::menu_page = 0;
+    }
+    Global::need_to_update_screen = true;
+  }
+}
+
+inline void OnKpUpClicked() {
+  switch (Global::menu_page) {
+    case MENU_PAGE_WH: {
+      ++Global::wh_mode;
+      if (Global::wh_mode >= WH_MODE_MAX) {
+        Global::wh_mode = 0;
+      }
+      break;
+    }
+
+    case MENU_PAGE_BHOP: {
+      if (Global::is_anything_selected) {
+        ++Global::bhop_button;
+        if (Global::bhop_button >= BHOP_BTN_MAX) {
+          Global::bhop_button = 0;
+        }
+        Utils::Save(BHOP_BTN_ADDR, Global::bhop_button);
+      }
+      break;
+    }
+
+    default: {
+      // TODO(sn0wyQ): Display some error
+      break;
+    }
+  }
+}
+
+inline void OnKpDownClicked() {
+  switch (Global::menu_page) {
+    case MENU_PAGE_WH: {
+      if (Global::wh_mode == 0) {
+        Global::wh_mode = WH_MODE_MAX - 1;
+      } else {
+        --Global::wh_mode;
+      }
+      break;
+    }
+
+    case MENU_PAGE_BHOP: {
+      if (Global::is_anything_selected) {
+        if (Global::bhop_button == 0) {
+          Global::bhop_button = BHOP_BTN_MAX - 1;
+        } else {
+          --Global::bhop_button;
+        }
+        Utils::Save(BHOP_BTN_ADDR, Global::bhop_button);
+      }
+      break;
+    }
+
+    default: {
+      // TODO(sn0wyQ): Display some error
+      break;
+    }
+  }
+}
+
+inline void OnKpLeftClicked() {
+  if (!Global::is_anything_selected) {
+    if (Global::menu_page == 0) {
+      Global::menu_page = MENU_PAGE_MAX - 1;
+    } else {
+      --Global::menu_page;
+    }
+  }
+}
+
+inline void OnKpSelectClicked() {
+  switch (Global::menu_page) {
+    case MENU_PAGE_WH: {
+      ++Global::wh_page;
+      if (Global::wh_mode >= WH_PAGE_POS) {
+        Global::wh_page = 0;
+      }
+      break;
+    }
+
+    case MENU_PAGE_BHOP: {
+      Global::is_anything_selected = !Global::is_anything_selected;
+      if (Global::is_anything_selected) {
+        Global::lcd_screen.setCursor(10, 1);
+        Global::lcd_screen.blink();
+      } else {
+        Global::lcd_screen.noBlink();
+      }
       break;
     }
 
