@@ -15,7 +15,7 @@ set(SOURCES
         Timer/timer.cpp
         Utils/utils.cpp
         dump.h
-        )
+        Vector/Vector.h)
 
 add_executable(PC main.cpp ${SOURCES})
 target_include_directories(PC PUBLIC

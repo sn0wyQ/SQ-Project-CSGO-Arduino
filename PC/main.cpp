@@ -60,6 +60,10 @@ void TriggerBot(const LocalPlayer& local_player,
   Arduino::SendCommand(CMD_SHOOT);
 }
 
+void AimBot(const LocalPlayer& local_player) {
+  
+}
+
 void Loop(const Module& client) {
   CheckArduinoOutput();
 
