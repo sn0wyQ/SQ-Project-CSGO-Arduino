@@ -22,12 +22,6 @@ inline float RadToDeg(float x) {
 class QAngle;
 class Vector;
 
-enum {
-  kPitch = 0,  // up / down
-  kYaw,  // left / right
-  kRoll  // fall over
-};
-
 class QAngle {
  public:
   float x, y, z;
@@ -41,18 +35,7 @@ class QAngle {
 
   Vector ToVector() const;
   float& operator[](int i);
-  float Length() const;
-  float LengthSqr() const;
 };
-
-inline float QAngle::Length() const {
-  return sqrt(LengthSqr());
-}
-
-
-inline float QAngle::LengthSqr() const {
-  return x * x + y * y;
-}
 
 inline void QAngleSubtract(const QAngle& a, const QAngle& b, QAngle* result) {
   result->x = a.x - b.x;
@@ -108,7 +91,7 @@ class Vector {
 };
 
 float Vector::DistTo(const Vector& vOther) const {
-  Vector delta;
+  Vector delta{};
 
   delta.x = x - vOther.x;
   delta.y = y - vOther.y;
@@ -425,30 +408,30 @@ inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle) {
   return sqrtf(delta.x * delta.x + delta.y * delta.y);
 }
 
-inline void VectorAngles(const Vector& forward, QAngle& angles) {
+inline void VectorAngles(const Vector& forward, QAngle* angles) {
   if (forward[1] == 0.0f && forward[0] == 0.0f) {
-    angles.x = (forward[2] > 0.0f) ? 270.0f : 90.0f;  // Pitch (up/down)
-    angles.y = 0.0f;  // Yaw (left/right)
+    angles->x = (forward[2] > 0.0f) ? 270.0f : 90.0f;  // Pitch (up/down)
+    angles->y = 0.0f;  // Yaw (left/right)
   } else {
-    angles.x = -atan2(-forward[2], forward.Length2D()) * kRadToDeg;
-    angles.y = atan2(forward[1], forward[0]) * kRadToDeg;
+    angles->x = -atan2(-forward[2], forward.Length2D()) * kRadToDeg;
+    angles->y = atan2(forward[1], forward[0]) * kRadToDeg;
 
-    if (angles.y > 90.f) {
-      angles.y -= 180.f;
-    } else if (angles.y < 90.f) {
-      angles.y += 180.f;
-    } else if (angles.y == 90.f) {
-      angles.y = 0;
+    if (angles->y > 90.f) {
+      angles->y -= 180.f;
+    } else if (angles->y < 90.f) {
+      angles->y += 180.f;
+    } else if (angles->y == 90.f) {
+      angles->y = 0;
     }
   }
 
-  angles.z = 0.0f;
+  angles->z = 0.0f;
 }
 
 inline QAngle CalcAngle(Vector src, Vector dst) {
-  QAngle angles;
+  QAngle angles{};
   Vector delta = src - dst;
-  VectorAngles(delta, angles);
+  VectorAngles(delta, &angles);
   delta.NormalizeVector();
   return angles;
 }
