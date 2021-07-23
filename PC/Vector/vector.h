@@ -227,12 +227,12 @@ class Vector2D {
   bool operator!=(const Vector2D& v) const;
 
   // arithmetic operations
-  Vector2D&	operator+=(const Vector2D &v);
-  Vector2D&	operator-=(const Vector2D &v);
-  Vector2D&	operator*=(const Vector2D &v);
-  Vector2D&	operator*=(float s);
-  Vector2D&	operator/=(const Vector2D &v);
-  Vector2D&	operator/=(float s);
+  Vector2D& operator+=(const Vector2D &v);
+  Vector2D& operator-=(const Vector2D &v);
+  Vector2D& operator*=(const Vector2D &v);
+  Vector2D& operator*=(float s);
+  Vector2D& operator/=(const Vector2D &v);
+  Vector2D& operator/=(float s);
 
   // assignment
   Vector2D& operator=(const Vector2D &vOther) = default;
@@ -250,10 +250,12 @@ class Vector2D {
   Vector2D operator/(const Vector2D& v) const;
   Vector2D operator*(float fl) const;
   Vector2D operator/(float fl) const;
+
 #else
+
  private:
-	// No copy constructors allowed if we're in optimal mode
-	Vector2D(const Vector2D& vOther);
+  // No copy constructors allowed if we're in optimal mode
+  Vector2D(const Vector2D& vOther);
 #endif  // VECTOR_NO_SLOW_OPERATIONS
 };
 
@@ -270,11 +272,11 @@ inline Vector2D::Vector2D(const Vector2D &vOther) {
 }
 
 inline float& Vector2D::operator[](int i) {
-  return ((float*)this)[i];
+  return reinterpret_cast<float*>(this)[i];
 }
 
 inline float Vector2D::operator[](int i) const {
-  return ((float*)this)[i];
+  return reinterpret_cast<const float*>(this)[i];
 }
 
 inline bool Vector2D::operator==(const Vector2D& src) const {
@@ -322,37 +324,37 @@ inline Vector2D& Vector2D::operator/=(const Vector2D& v) {
   return *this;
 }
 
-inline void Vector2DAdd(const Vector2D& a, const Vector2D& b, Vector2D& c) {
-  c.x = a.x + b.x;
-  c.y = a.y + b.y;
+inline void Vector2DAdd(const Vector2D& a, const Vector2D& b, Vector2D* c) {
+  c->x = a.x + b.x;
+  c->y = a.y + b.y;
 }
 
 inline void Vector2DSubtract(
-    const Vector2D& a, const Vector2D& b, Vector2D& c) {
-  c.x = a.x - b.x;
-  c.y = a.y - b.y;
+    const Vector2D& a, const Vector2D& b, Vector2D* c) {
+  c->x = a.x - b.x;
+  c->y = a.y - b.y;
 }
 
-inline void Vector2DMultiply(const Vector2D& a, float b, Vector2D& c) {
-  c.x = a.x * b;
-  c.y = a.y * b;
+inline void Vector2DMultiply(const Vector2D& a, float b, Vector2D* c) {
+  c->x = a.x * b;
+  c->y = a.y * b;
 }
 
 inline void Vector2DMultiply(
-    const Vector2D& a, const Vector2D& b, Vector2D& c) {
-  c.x = a.x * b.x;
-  c.y = a.y * b.y;
+    const Vector2D& a, const Vector2D& b, Vector2D* c) {
+  c->x = a.x * b.x;
+  c->y = a.y * b.y;
 }
 
-inline void Vector2DDivide(const Vector2D& a, float b, Vector2D& c) {
+inline void Vector2DDivide(const Vector2D& a, float b, Vector2D* c) {
   float oob = 1.0f / b;
-  c.x = a.x * oob;
-  c.y = a.y * oob;
+  c->x = a.x * oob;
+  c->y = a.y * oob;
 }
 
-inline void Vector2DDivide(const Vector2D& a, const Vector2D& b, Vector2D& c) {
-  c.x = a.x / b.x;
-  c.y = a.y / b.y;
+inline void Vector2DDivide(const Vector2D& a, const Vector2D& b, Vector2D* c) {
+  c->x = a.x / b.x;
+  c->y = a.y / b.y;
 }
 
 inline Vector2D Vector2D::operator-() const {
@@ -361,37 +363,37 @@ inline Vector2D Vector2D::operator-() const {
 
 inline Vector2D Vector2D::operator+(const Vector2D& v) const {
   Vector2D res{};
-  Vector2DAdd(*this, v, res);
+  Vector2DAdd(*this, v, &res);
   return res;
 }
 
 inline Vector2D Vector2D::operator-(const Vector2D& v) const {
   Vector2D res{};
-  Vector2DSubtract(*this, v, res);
+  Vector2DSubtract(*this, v, &res);
   return res;
 }
 
 inline Vector2D Vector2D::operator*(float fl) const {
   Vector2D res{};
-  Vector2DMultiply(*this, fl, res);
+  Vector2DMultiply(*this, fl, &res);
   return res;
 }
 
 inline Vector2D Vector2D::operator*(const Vector2D& v) const {
   Vector2D res{};
-  Vector2DMultiply(*this, v, res);
+  Vector2DMultiply(*this, v, &res);
   return res;
 }
 
 inline Vector2D Vector2D::operator/(float fl) const {
   Vector2D res{};
-  Vector2DDivide(*this, fl, res);
+  Vector2DDivide(*this, fl, &res);
   return res;
 }
 
 inline Vector2D Vector2D::operator/(const Vector2D& v) const {
   Vector2D res{};
-  Vector2DDivide(*this, v, res);
+  Vector2DDivide(*this, v, &res);
   return res;
 }
 
@@ -399,31 +401,31 @@ inline Vector2D operator*(float fl, const Vector2D& v) {
   return v * fl;
 }
 
-inline void NormalizeAngles(Vector& angle) {
-  while (angle.x > 89.0f) {
-    angle.x -= 180.f;
+inline void NormalizeAngles(Vector* angle) {
+  while (angle->x > 89.0f) {
+    angle->x -= 180.f;
   }
 
-  while (angle.x < -89.0f) {
-    angle.x += 180.f;
+  while (angle->x < -89.0f) {
+    angle->x += 180.f;
   }
 
-  while (angle.y > 180.f) {
-    angle.y -= 360.f;
+  while (angle->y > 180.f) {
+    angle->y -= 360.f;
   }
 
-  while (angle.y < -180.f) {
-    angle.y += 360.f;
+  while (angle->y < -180.f) {
+    angle->y += 360.f;
   }
 }
 
 inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle) {
   Vector delta = aimAngle.ToVector() - viewAngle.ToVector();
-  NormalizeAngles(delta);
+  NormalizeAngles(&delta);
   return sqrtf(delta.x * delta.x + delta.y * delta.y);
 }
 
-inline void VectorAngles(const Vector& forward, QAngle &angles) {
+inline void VectorAngles(const Vector& forward, QAngle& angles) {
   if (forward[1] == 0.0f && forward[0] == 0.0f) {
     angles[0] = (forward[2] > 0.0f) ? 270.0f : 90.0f; // Pitch (up/down)
     angles[1] = 0.0f;  //yaw left/right

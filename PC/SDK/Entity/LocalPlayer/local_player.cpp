@@ -22,7 +22,7 @@ std::pair<Vector, float> LocalPlayer::GetAimAngleDiffAndDistance(
   float dist = 0.f;
 
   Vector view_angle = this->GetLocalViewAngle();
-  NormalizeAngles(view_angle);
+  NormalizeAngles(&view_angle);
 
   const Team local_player_team = this->GetTeam();
 
@@ -52,7 +52,7 @@ std::pair<Vector, float> LocalPlayer::GetAimAngleDiffAndDistance(
       best_fov = fov;
 
       angle_diff = angle_to_target - view_angle;
-      NormalizeAngles(angle_diff);
+      NormalizeAngles(&angle_diff);
 
       dist = this->GetPos().DistTo(target.GetPos());
     }
@@ -66,7 +66,7 @@ Vector LocalPlayer::GetAngleToTarget(const Entity& target, int bone) const {
   const Vector aim_view = target.GetBonePos(bone);
 
   Vector dst = CalcAngle(cur_view, aim_view).ToVector();
-  NormalizeAngles(dst);
+  NormalizeAngles(&dst);
 
   return dst;
 }
