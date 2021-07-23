@@ -7,8 +7,14 @@
 
 namespace Global {
 
+// Buttons
 extern int bhop_button;
 extern int trigger_bot_button;
+extern int aim_bot_button;
+
+// Window size
+extern float window_w;
+extern float window_h;
 
 }  // namespace Global
 

@@ -49,6 +49,13 @@ void loop() {
         break;
       }
 
+      case CMD_AIM: {
+        char dx = static_cast<char>(Serial.read());
+        char dy = static_cast<char>(Serial.read());
+        Mouse.move(dx, dy, 0);
+        break;
+      }
+
       default: {
         Utils::Error(ER_UNKNOWN_CMD);
         break;

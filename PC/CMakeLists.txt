@@ -14,8 +14,9 @@ set(SOURCES
         SDK/EntityList/entity_list.cpp
         Timer/timer.cpp
         Utils/utils.cpp
+        Vector/vector.h
         dump.h
-        Vector/Vector.h)
+        SDK/Entity/LocalPlayer/abstract_local_player.h)
 
 add_executable(PC main.cpp ${SOURCES})
 target_include_directories(PC PUBLIC

@@ -42,7 +42,7 @@ set(Mouse_RECURSE true)
 
 #### Additional settings for programmer. From programmers.txt
 set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-set(${PROJECT_NAME}_PORT COM10)
+set(${PROJECT_NAME}_PORT COM13)
 set(leonardo.upload.speed 128000)
 
 ## Verbose build process

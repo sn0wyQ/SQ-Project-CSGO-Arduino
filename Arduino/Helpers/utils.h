@@ -81,6 +81,7 @@ inline void UpdateScreen() {
   Global::need_to_update_screen = false;
   Global::lcd_screen.clear();
 
+
   switch (Global::menu_page) {
     case MENU_PAGE_WH: {
       switch (Global::wh_mode) {

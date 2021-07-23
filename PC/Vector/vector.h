@@ -8,6 +8,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#ifndef M_PI
+#define M_PI 3.14159265f
+#endif  // M_PI
+
 #define DEG2RAD( x )  ( (float)(x) * (float)(M_PI / 180.f) )
 #define RAD2DEG( x )  ( (float)(x) * 180.0f / M_PI)
 
@@ -374,7 +378,7 @@ inline void VectorITransform(const Vector& in1, const matrix3x4_t& in2, Vector& 
   VectorITransform(&in1.x, in2, &out.x);
 }
 
-// assume in2 is a rotation and rotate the input vector
+// assume in2 is a rotation and rotate the input Vector
 inline void VectorRotate(const float* in1, const matrix3x4_t& in2, float* out)
 {
   out[0] = DotProduct(in1, in2[0]);
@@ -626,8 +630,6 @@ inline QAngle Vector::ToQAngle() const
   return QAngle(x, y, z);
 }
 
-#endif
-
 class Vector2D
 {
  public:
@@ -733,9 +735,7 @@ class Vector2D
   // Returns a Vector2D with the min or max in X, Y, and Z.
   Vector2D	Min(const Vector2D &vOther) const;
   Vector2D	Max(const Vector2D &vOther) const;
-
 #else
-
   private:
 	// No copy constructors allowed if we're in optimal mode
 	Vector2D(const Vector2D& vOther);
