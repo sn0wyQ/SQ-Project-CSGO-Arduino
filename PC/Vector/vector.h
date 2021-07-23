@@ -428,9 +428,9 @@ inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle) {
 inline void VectorAngles(const Vector& forward, QAngle& angles) {
   if (forward[1] == 0.0f && forward[0] == 0.0f) {
     angles[0] = (forward[2] > 0.0f) ? 270.0f : 90.0f; // Pitch (up/down)
-    angles[1] = 0.0f;  //yaw left/right
+    angles[1] = 0.0f;  // Yaw (left/right)
   } else {
-    angles[0] = atan2(-forward[2], forward.Length2D()) * kRadToDeg;
+    angles[0] = -atan2(-forward[2], forward.Length2D()) * kRadToDeg;
     angles[1] = atan2(forward[1], forward[0]) * kRadToDeg;
 
     if (angles[1] > 90.f) {
