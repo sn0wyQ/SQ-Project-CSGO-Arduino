@@ -28,8 +28,7 @@ enum {
   kRoll  // fall over
 };
 
-class QAngle
-{
+class QAngle {
  public:
   float x, y, z;
 
@@ -55,40 +54,39 @@ inline float QAngle::LengthSqr() const {
   return x * x + y * y;
 }
 
-inline void QAngleSubtract(const QAngle& a, const QAngle& b, QAngle& result) {
-  result.x = a.x - b.x;
-  result.y = a.y - b.y;
-  result.z = a.z - b.z;
+inline void QAngleSubtract(const QAngle& a, const QAngle& b, QAngle* result) {
+  result->x = a.x - b.x;
+  result->y = a.y - b.y;
+  result->z = a.z - b.z;
 }
 
-inline void QAngleMultiply(const QAngle& a, float b, QAngle& c) {
-  c.x = a.x * b;
-  c.y = a.y * b;
-  c.z = a.z * b;
+inline void QAngleMultiply(const QAngle& a, float b, QAngle* c) {
+  c->x = a.x * b;
+  c->y = a.y * b;
+  c->z = a.z * b;
 }
 
 inline QAngle QAngle::operator*(float fl) const {
   QAngle res{};
-  QAngleMultiply(*this, fl, res);
+  QAngleMultiply(*this, fl, &res);
   return res;
 }
 
 inline QAngle QAngle::operator-(const QAngle& v) const {
   QAngle res{};
-  QAngleSubtract(*this, v, res);
+  QAngleSubtract(*this, v, &res);
   return res;
 }
 
 inline float& QAngle::operator[](int i) {
-  return ((float*)this)[i];
+  return reinterpret_cast<float*>(this)[i];
 }
 
 inline float QAngle::operator[](int i) const {
-  return ((float*)this)[i];
+  return reinterpret_cast<const float*>(this)[i];
 }
 
-class Vector
-{
+class Vector {
  public:
   float x, y, z;
 
@@ -124,7 +122,7 @@ inline float& Vector::operator[](int i) {
 }
 
 inline float Vector::operator[](int i) const {
-  return ((float*)this)[i];
+  return reinterpret_cast<const float*>(this)[i];
 }
 
 inline float Vector::Length() const {
@@ -147,29 +145,29 @@ inline float Vector::NormalizeVector() {
   return l;
 }
 
-__forceinline void VectorAdd(const Vector& a, const Vector& b, Vector& result) {
-  result.x = a.x + b.x;
-  result.y = a.y + b.y;
-  result.z = a.z + b.z;
+__forceinline void VectorAdd(const Vector& a, const Vector& b, Vector* result) {
+  result->x = a.x + b.x;
+  result->y = a.y + b.y;
+  result->z = a.z + b.z;
 }
 
 __forceinline void VectorSubtract(
-    const Vector& a, const Vector& b, Vector& result) {
-  result.x = a.x - b.x;
-  result.y = a.y - b.y;
-  result.z = a.z - b.z;
+    const Vector& a, const Vector& b, Vector* result) {
+  result->x = a.x - b.x;
+  result->y = a.y - b.y;
+  result->z = a.z - b.z;
 }
 
-__forceinline void VectorMultiply(const Vector& a, float b, Vector& c) {
-  c.x = a.x * b;
-  c.y = a.y * b;
-  c.z = a.z * b;
+__forceinline void VectorMultiply(const Vector& a, float b, Vector* c) {
+  c->x = a.x * b;
+  c->y = a.y * b;
+  c->z = a.z * b;
 }
 
-__forceinline void VectorMultiply(const Vector& a, const Vector& b, Vector& c) {
-  c.x = a.x * b.x;
-  c.y = a.y * b.y;
-  c.z = a.z * b.z;
+__forceinline void VectorMultiply(const Vector& a, const Vector& b, Vector* c) {
+  c->x = a.x * b.x;
+  c->y = a.y * b.y;
+  c->z = a.z * b.z;
 }
 
 __forceinline Vector& Vector::operator/=(float fl) {
@@ -182,25 +180,25 @@ __forceinline Vector& Vector::operator/=(float fl) {
 
 inline Vector Vector::operator-(const Vector& v) const {
   Vector res{};
-  VectorSubtract(*this, v, res);
+  VectorSubtract(*this, v, &res);
   return res;
 }
 
 inline Vector Vector::operator+(const Vector& v) const {
   Vector res{};
-  VectorAdd(*this, v, res);
+  VectorAdd(*this, v, &res);
   return res;
 }
 
 inline Vector Vector::operator*(float fl) const {
   Vector res{};
-  VectorMultiply(*this, fl, res);
+  VectorMultiply(*this, fl, &res);
   return res;
 }
 
 inline Vector Vector::operator*(const Vector& v) const {
   Vector res{};
-  VectorMultiply(*this, v, res);
+  VectorMultiply(*this, v, &res);
   return res;
 }
 
@@ -212,14 +210,13 @@ inline QAngle Vector::ToQAngle() const {
   return QAngle(x, y, z);
 }
 
-class Vector2D
-{
+class Vector2D {
  public:
   float x, y;
 
   Vector2D() = default;
   Vector2D(float X, float Y);
-  Vector2D(const float *pFloat);
+  explicit Vector2D(const float *pFloat);
 
   // array access...
   float operator[](int i) const;
