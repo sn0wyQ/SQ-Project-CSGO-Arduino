@@ -31,6 +31,8 @@ byte trigger_bot_state = TRIGGER_OFF;
 int trigger_bot_delay = 0;
 unsigned int trigger_bot_delay_start = 0;
 
+byte aim_bot_state = AIM_OFF;
+
 }  // namespace Global
 
 #endif  // ARDUINO_HELPERS_GLOBAL_H_

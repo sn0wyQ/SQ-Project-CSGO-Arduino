@@ -19,8 +19,11 @@ void setup() {
   Keyboard.begin();
 
   Utils::Load(BHOP_BTN_ADDR, &Global::bhop_button);
+
   Utils::Load(TRIGGER_STATE_ADDR, &Global::trigger_bot_state);
   Utils::Load(TRIGGER_DELAY_ADDR, &Global::trigger_bot_delay);
+
+  Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
 }
 
 void loop() {
@@ -45,6 +48,17 @@ void loop() {
               Global::trigger_bot_delay_start = millis();
             }
           }
+        }
+        break;
+      }
+
+      case CMD_AIM: {
+        // We must read |delta_x| and |delta_y|!
+        // (Else they will be read as command)
+        char delta_x = static_cast<char>(Serial.read());
+        char delta_y = static_cast<char>(Serial.read());
+        if (Global::aim_bot_state == AIM_ON) {
+          Mouse.move(delta_x, delta_y, 0);
         }
         break;
       }

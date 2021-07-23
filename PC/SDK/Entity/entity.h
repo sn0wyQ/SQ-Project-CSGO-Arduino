@@ -2,6 +2,7 @@
 #define PC_SDK_ENTITY_ENTITY_H_
 
 #include "Memory/memory.h"
+#include "Vector/vector.h"
 #include "dump.h"
 
 enum class Team {
@@ -32,11 +33,20 @@ class Entity {
   int GetHP() const;
   bool IsAlive() const;
 
+  bool IsDormant() const;
+
   Team GetTeam() const;
 
   int GetFlags() const;
 
   bool IsInAir() const;
+
+  Vector GetPos() const;
+
+  Vector GetViewAngle() const;
+  Vector GetView() const;
+
+  Vector GetBonePos(int bone) const;
 
  private:
   DWORD address_{0};

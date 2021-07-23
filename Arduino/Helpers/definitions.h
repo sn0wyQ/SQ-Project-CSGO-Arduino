@@ -31,10 +31,14 @@
 // #define ICON_WALL      byte(0)
 // -- TriggerBot page
 // #define ICON_WALL      byte(0)
+// -- AimBot page
+// #define ICON_WALL      byte(0)
 
 // Commands
-#define CMD_JUMP    1
-#define CMD_SHOOT   2
+#define CMD_JUMP  1
+#define CMD_SHOOT 2
+#define CMD_AIM   3
+#define CMD_INFO  4
 
 // Error codes
 #define ER_UNKNOWN_CMD 1
@@ -43,8 +47,8 @@
 #define MENU_PAGE_WH       0
 #define MENU_PAGE_BHOP     1
 #define MENU_PAGE_TRIGGER  2
-#define MENU_PAGE_MAX      3
-#define MENU_PAGE_AIM      // Not ready yet
+#define MENU_PAGE_AIM      3
+#define MENU_PAGE_MAX      4
 
 // WallHack modes
 #define WH_MODE_NEAREST 0
@@ -74,10 +78,19 @@
 
 #define TRIGGER_MAX_DELAY 999
 
+// AimBot states
+#define AIM_OFF 0
+#define AIM_ON  1
+#define AIM_MAX 2
+
 // Settings addresses
+// -- BunnyHop
 #define BHOP_BTN_ADDR       0  // (size - 1 byte)
+// -- TriggerBot
 #define TRIGGER_STATE_ADDR  1  // (size - 1 byte)
 #define TRIGGER_DELAY_ADDR  2  // (size - 4 bytes)
+// -- AimBot
+#define AIM_STATE_ADDR      6  // (size - 1 byte)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "SDK/Entity/LocalPlayer/local_player.h"
 #include "SDK/Entity/entity.h"
 #include "SDK/EntityList/entity_list.h"
@@ -8,6 +10,7 @@
 #include "Memory/memory.h"
 #include "Timer/timer.h"
 #include "Utils/utils.h"
+#include "Vector/vector.h"
 #include "dump.h"
 
 void CheckArduinoOutput() {
@@ -46,12 +49,12 @@ void TriggerBot(const LocalPlayer& local_player,
     return;
   }
 
-  int target_entity_index = local_player.GetCrosshairId();
-  if (!EntityList::CanBeEntity(target_entity_index)) {
+  int target_entity_id = local_player.GetCrosshairId();
+  if (!EntityList::CanBeEntity(target_entity_id)) {
     return;
   }
 
-  Entity target_entity = entity_list.GetEntity(target_entity_index);
+  Entity target_entity = entity_list.GetEntity(target_entity_id);
   if (!target_entity.IsAlive()
       || target_entity.GetTeam() == local_player.GetTeam()) {
     return;
@@ -60,10 +63,29 @@ void TriggerBot(const LocalPlayer& local_player,
   Arduino::SendCommand(CMD_SHOOT);
 }
 
-void Loop(const Module& client) {
+void AimBot(const Module& client,
+            const LocalPlayer& local_player,
+            const EntityList& entity_list) {
+  if (!Utils::IsHeld(Global::aim_bot_button)) {
+    return;
+  }
+
+  std::pair<Vector, float> angle_diff_and_distance =
+      local_player.GetAimAngleDiffAndDistance(entity_list, 8, 180.f);
+  Vector angle_diff = angle_diff_and_distance.first;
+  float distance = angle_diff_and_distance.second;
+
+  std::pair<char, char> mouse_delta =
+      Utils::AngleDiffToMouseDelta(local_player, angle_diff, distance);
+  Arduino::SendCommand(CMD_AIM, {mouse_delta.first, mouse_delta.second});
+}
+
+void Loop(const Module& client, const Module& engine) {
   CheckArduinoOutput();
 
-  LocalPlayer local_player(client);
+  auto client_state =
+      Memory::Read<DWORD>(engine.base + Signatures::dwClientState);
+  LocalPlayer local_player(client, client_state);
   if (!local_player.IsAlive()) {
     return;
   }
@@ -73,6 +95,8 @@ void Loop(const Module& client) {
   EntityList entity_list(client);
 
   TriggerBot(local_player, entity_list);
+
+  AimBot(client, local_player, entity_list);
 }
 
 int main() {
@@ -108,17 +132,18 @@ int main() {
     return 0;
   }
   Module client = Memory::GetModule("client.dll");
+  Module engine = Memory::GetModule("engine.dll");
   Utils::Log("[MEMORY] Successfully attached to CS:GO process:");
   Utils::Log("\tBase: %\n\tSize: %\n", client.base, client.size);
 
   Utils::GetKey(&Global::bhop_button, "Bunny Hop");
   Utils::GetKey(&Global::trigger_bot_button, "Trigger Bot");
+  Utils::GetKey(&Global::aim_bot_button, "Aim Bot");
 
   Utils::Log("Cheat started successfully!\n");
 
   while (true) {
-    Loop(client);
-    Sleep(1);
+    Loop(client, engine);
   }
 
   Memory::Detach();
