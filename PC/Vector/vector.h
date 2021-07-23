@@ -1,5 +1,5 @@
-#ifndef VECTOR_H_
-#define VECTOR_H_
+#ifndef PC_VECTOR_VECTOR_H_
+#define PC_VECTOR_VECTOR_H_
 #define _USE_MATH_DEFINES
 
 #include <cfloat>
@@ -8,12 +8,17 @@
 #include <cstdlib>
 #include <iostream>
 
-#ifndef M_PI
-#define M_PI 3.14159265f
-#endif  // M_PI
+constexpr float kPi = 3.14159265359f;
+constexpr float kDegToRad = kPi / 180.f;
+constexpr float kRadToDeg = 180.f / kPi;
 
-#define DEG2RAD( x )  ( (float)(x) * (float)(M_PI / 180.f) )
-#define RAD2DEG( x )  ( (float)(x) * 180.0f / M_PI)
+inline float DegToRad(float x) {
+  return x * kDegToRad;
+}
+
+inline float RadToDeg(float x) {
+  return x * kRadToDeg;
+}
 
 #define CHECK_VALID( _v ) _ASSERT( (_v).IsValid() )
 #define Assert( _exp ) ((void)0)
@@ -256,9 +261,9 @@ inline void AngleVectors(const QAngle &angles, Vector *forward, Vector *right, V
 {
   float sr, sp, sy, cr, cp, cy;
 
-  SinCos(DEG2RAD(angles[YAW]), &sy, &cy);
-  SinCos(DEG2RAD(angles[PITCH]), &sp, &cp);
-  SinCos(DEG2RAD(angles[ROLL]), &sr, &cr);
+  SinCos(DegToRad(angles[YAW]), &sy, &cy);
+  SinCos(DegToRad(angles[PITCH]), &sp, &cp);
+  SinCos(DegToRad(angles[ROLL]), &sr, &cr);
 
   if (forward)
   {
@@ -296,13 +301,13 @@ inline void VectorAnglesX(Vector* forward, Vector* angles)
   }
   else
   {
-    yaw = static_cast<float>(atan2(forward->y, forward->x) * 180.0 / M_PI);
+    yaw = static_cast<float>(atan2(forward->y, forward->x) * 180.0 / kPi);
 
     if (yaw < 0) yaw += 360.0;
 
     tmp = static_cast<float>(sqrt(forward->x * forward->x + forward->y * forward->y));
 
-    pitch = static_cast<float>(atan2(forward->z, tmp) * 180 / M_PI);
+    pitch = static_cast<float>(atan2(forward->z, tmp) * 180 / kPi);
   }
 
   angles->x = -pitch;
@@ -316,15 +321,15 @@ inline void AngleToVectors(const Vector& vAngles, Vector* vForward, Vector* vRig
   float Angle;
   float sr, sp, sy, cr, cp, cy;
 
-  Angle = static_cast<vec_t>(vAngles.y * (M_PI * 2 / 360));
+  Angle = static_cast<vec_t>(vAngles.y * (kPi * 2 / 360));
   sy = sin(Angle);
   cy = cos(Angle);
 
-  Angle = static_cast<vec_t>(vAngles.x * (M_PI * 2 / 360));
+  Angle = static_cast<vec_t>(vAngles.x * (kPi * 2 / 360));
   sp = sin(Angle);
   cp = cos(Angle);
 
-  Angle = static_cast<vec_t>(vAngles.z * (M_PI * 2 / 360));
+  Angle = static_cast<vec_t>(vAngles.z * (kPi * 2 / 360));
   sr = sin(Angle);
   cr = cos(Angle);
 
@@ -500,9 +505,9 @@ inline Vector Vector::Angle()
   if (up)
   {
     Vector left = (*up).Cross(*this);
-    roll = static_cast<vec_t>(atan2f(left.z, (left.y * x) - (left.x * y)) * 180.0f / M_PI);
+    roll = static_cast<vec_t>(atan2f(left.z, (left.y * x) - (left.x * y)) * 180.0f / kPi);
   }
-  return Vector(static_cast<vec_t>(atan2f(-z, sqrt(x * x + y * y)) * 180.0f / M_PI), static_cast<vec_t>(atan2f(y, x) * 180.0f / M_PI), static_cast<vec_t>(roll));
+  return Vector(static_cast<vec_t>(atan2f(-z, sqrt(x * x + y * y)) * 180.0f / kPi), static_cast<vec_t>(atan2f(y, x) * 180.0f / kPi), static_cast<vec_t>(roll));
 }
 __forceinline bool Vector::IsZero() const
 {
@@ -612,8 +617,8 @@ inline void AngleVectors(const QAngle& angles, Vector* forward)
 {
   float sp, sy, cp, cy;
 
-  SinCos(DEG2RAD(angles[YAW]), &sy, &cy);
-  SinCos(DEG2RAD(angles[PITCH]), &sp, &cp);
+  SinCos(DegToRad(angles[YAW]), &sy, &cy);
+  SinCos(DegToRad(angles[PITCH]), &sp, &cp);
 
   forward->x = cp * cy;
   forward->y = cp * sy;
@@ -1242,8 +1247,8 @@ inline  void AngleVectors(const QAngle &angles, Vector& forward)
 
   float sp, sy, cp, cy;
 
-  SinCos(DEG2RAD(angles[YAW]), &sy, &cy);
-  SinCos(DEG2RAD(angles[PITCH]), &sp, &cp);
+  SinCos(DegToRad(angles[YAW]), &sy, &cy);
+  SinCos(DegToRad(angles[PITCH]), &sp, &cp);
 
   forward.x = cp * cy;
   forward.y = cp * sy;
@@ -1307,8 +1312,8 @@ inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle)
 
 inline float CrosshairDistance(const QAngle& viewAngle, const QAngle& aimAngle, float distance)
 {
-  auto fPitchDifference = sin(abs(DEG2RAD(aimAngle.x - viewAngle.x))) * distance;
-  auto fYawDifference = sin(abs(DEG2RAD(aimAngle.y - viewAngle.y))) * distance;
+  auto fPitchDifference = sin(abs(DegToRad(aimAngle.x - viewAngle.x))) * distance;
+  auto fYawDifference = sin(abs(DegToRad(aimAngle.y - viewAngle.y))) * distance;
 
   return sqrt(fPitchDifference * fPitchDifference + fYawDifference * fYawDifference);
 }
@@ -1322,17 +1327,17 @@ inline void VectorAngles(const Vector &forward, const Vector &up, Vector &angles
 
   if (xyDist > 0.001f)
   {
-    angles.x = static_cast<vec_t>(RAD2DEG(atan2f(-forward.z, xyDist)));
-    angles.y = static_cast<vec_t>(RAD2DEG(atan2f(forward.y, forward.x)));
+    angles.x = static_cast<vec_t>(RadToDeg(atan2f(-forward.z, xyDist)));
+    angles.y = static_cast<vec_t>(RadToDeg(atan2f(forward.y, forward.x)));
 
     auto up_z = (left.y * forward.x) - (left.x * forward.y);
 
-    angles.z = static_cast<vec_t>(RAD2DEG(atan2f(left.z, up_z)));
+    angles.z = static_cast<vec_t>(RadToDeg(atan2f(left.z, up_z)));
   }
   else
   {
-    angles.x = static_cast<vec_t>(RAD2DEG(atan2f(-forward.z, xyDist)));
-    angles.y = static_cast<vec_t>(RAD2DEG(atan2f(-left.x, left.y)));
+    angles.x = static_cast<vec_t>(RadToDeg(atan2f(-forward.z, xyDist)));
+    angles.y = static_cast<vec_t>(RadToDeg(atan2f(-left.x, left.y)));
     angles.z = 0;
   }
 }
@@ -1346,8 +1351,8 @@ inline void VectorAngles(const Vector& forward, QAngle &angles)
   }
   else
   {
-    angles[0] = static_cast<vec_t>(atan2(-forward[2], forward.Length2D()) * -180 / M_PI);
-    angles[1] = static_cast<vec_t>(atan2(forward[1], forward[0]) * 180 / M_PI);
+    angles[0] = static_cast<vec_t>(atan2(-forward[2], forward.Length2D()) * -180 / kPi);
+    angles[1] = static_cast<vec_t>(atan2(forward[1], forward[0]) * 180 / kPi);
 
     if (angles[1] > 90)
       angles[1] -= 180;
@@ -1384,8 +1389,8 @@ inline float Distance3D(Vector from, Vector to) {
 inline void AngleVectors2(const Vector& qAngles, Vector& vecForward)
 {
   float sp, sy, cp, cy;
-  SinCos(static_cast<float>(qAngles[1] * (M_PI / 180.f)), &sy, &cy);
-  SinCos(static_cast<float>(qAngles[0] * (M_PI / 180.f)), &sp, &cp);
+  SinCos(static_cast<float>(qAngles[1] * (kPi / 180.f)), &sy, &cy);
+  SinCos(static_cast<float>(qAngles[0] * (kPi / 180.f)), &sp, &cp);
 
   vecForward[0] = cp * cy;
   vecForward[1] = cp * sy;
@@ -1402,14 +1407,14 @@ inline void VectorAngles2(const Vector &vecForward, Vector &vecAngles)
   }
   else
   {
-    vecView[1] = static_cast<vec_t>(atan2(vecForward[1], vecForward[0]) * 180.f / M_PI);
+    vecView[1] = static_cast<vec_t>(atan2(vecForward[1], vecForward[0]) * 180.f / kPi);
 
     if (vecView[1] < 0.f)
       vecView[1] += 360.f;
 
     vecView[2] = static_cast<vec_t>(sqrt(vecForward[0] * vecForward[0] + vecForward[1] * vecForward[1]));
 
-    vecView[0] = static_cast<vec_t>(atan2(vecForward[2], vecView[2]) * 180.f / M_PI);
+    vecView[0] = static_cast<vec_t>(atan2(vecForward[2], vecView[2]) * 180.f / kPi);
   }
 
   vecAngles[0] = -vecView[0];
@@ -1428,4 +1433,4 @@ inline Vector Lerp(Vector start, Vector end, float percent)
   return v;
 }
 
-#endif  // VECTOR_H_
+#endif  // PC_VECTOR_VECTOR_H_

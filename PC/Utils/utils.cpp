@@ -44,8 +44,8 @@ std::pair<char, char>
   // We multiply by 10.f so aim is NOT so slow
   float coef = (distance * 10.f) / sensitivity;
 
-  float delta_x = ClampFloatToChar(-std::sin(DEG2RAD(angle.y)) * coef);
-  float delta_y = ClampFloatToChar(std::sin(DEG2RAD(angle.x)) * coef);
+  float delta_x = ClampFloatToChar(-std::sin(DegToRad(angle.y)) * coef);
+  float delta_y = ClampFloatToChar(std::sin(DegToRad(angle.x)) * coef);
 
   return std::make_pair(static_cast<char>(delta_x), static_cast<char>(delta_y));
 }

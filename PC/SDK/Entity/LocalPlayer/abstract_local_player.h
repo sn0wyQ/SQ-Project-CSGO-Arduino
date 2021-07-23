@@ -1,5 +1,5 @@
-#ifndef ABSTRACT_LOCAL_PLAYER_H_
-#define ABSTRACT_LOCAL_PLAYER_H_
+#ifndef PC_SDK_ENTITY_LOCALPLAYER_ABSTRACT_LOCAL_PLAYER_H_
+#define PC_SDK_ENTITY_LOCALPLAYER_ABSTRACT_LOCAL_PLAYER_H_
 
 #include "SDK/Entity/entity.h"
 
@@ -10,4 +10,4 @@ class AbstractLocalPlayer : public Entity {
   virtual float GetSensitivity() const = 0;
 };
 
-#endif  // ABSTRACT_LOCAL_PLAYER_H_
+#endif  // PC_SDK_ENTITY_LOCALPLAYER_ABSTRACT_LOCAL_PLAYER_H_
