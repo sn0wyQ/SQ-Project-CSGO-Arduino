@@ -427,22 +427,22 @@ inline float GetFov(const QAngle& viewAngle, const QAngle& aimAngle) {
 
 inline void VectorAngles(const Vector& forward, QAngle& angles) {
   if (forward[1] == 0.0f && forward[0] == 0.0f) {
-    angles[0] = (forward[2] > 0.0f) ? 270.0f : 90.0f; // Pitch (up/down)
-    angles[1] = 0.0f;  // Yaw (left/right)
+    angles.x = (forward[2] > 0.0f) ? 270.0f : 90.0f;  // Pitch (up/down)
+    angles.y = 0.0f;  // Yaw (left/right)
   } else {
-    angles[0] = -atan2(-forward[2], forward.Length2D()) * kRadToDeg;
-    angles[1] = atan2(forward[1], forward[0]) * kRadToDeg;
+    angles.x = -atan2(-forward[2], forward.Length2D()) * kRadToDeg;
+    angles.y = atan2(forward[1], forward[0]) * kRadToDeg;
 
-    if (angles[1] > 90.f) {
-      angles[1] -= 180.f;
-    } else if (angles[1] < 90.f) {
-      angles[1] += 180.f;
-    } else if (angles[1] == 90.f) {
-      angles[1] = 0;
+    if (angles.y > 90.f) {
+      angles.y -= 180.f;
+    } else if (angles.y < 90.f) {
+      angles.y += 180.f;
+    } else if (angles.y == 90.f) {
+      angles.y = 0;
     }
   }
 
-  angles[2] = 0.0f;
+  angles.z = 0.0f;
 }
 
 inline QAngle CalcAngle(Vector src, Vector dst) {
