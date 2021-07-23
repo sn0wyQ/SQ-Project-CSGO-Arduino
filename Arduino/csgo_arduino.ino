@@ -24,7 +24,6 @@ void setup() {
   Utils::Load(TRIGGER_DELAY_ADDR, &Global::trigger_bot_delay);
 
   Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
-  Global::aim_bot_state = AIM_OFF;
 }
 
 void loop() {
