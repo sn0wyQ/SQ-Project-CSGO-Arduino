@@ -24,7 +24,7 @@ bool Utils::IsHeld(int key_code) {
   return (GetAsyncKeyState(key_code) & 0x8000);
 }
 
-char ClampToChar(float x) {
+char ClampFloatToChar(float x) {
   if (x < -126.9f) {
     return -127;
   }
@@ -41,10 +41,11 @@ std::pair<char, char>
                                  const Vector& angle,
                                  float distance) {
   float sensitivity = local_player.GetSensitivity();
+  // We multiply by 10.f so aim is NOT so slow
   float coef = (distance * 10.f) / sensitivity;
 
-  float delta_x = ClampToChar(-std::sin(DEG2RAD(angle.y)) * coef);
-  float delta_y = ClampToChar(std::sin(DEG2RAD(angle.x)) * coef);
+  float delta_x = ClampFloatToChar(-std::sin(DEG2RAD(angle.y)) * coef);
+  float delta_y = ClampFloatToChar(std::sin(DEG2RAD(angle.x)) * coef);
 
   return std::make_pair(static_cast<char>(delta_x), static_cast<char>(delta_y));
 }

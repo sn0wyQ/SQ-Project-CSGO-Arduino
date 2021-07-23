@@ -178,6 +178,16 @@ inline void UpdateScreen() {
       break;
     }
 
+    case MENU_PAGE_AIM: {
+      Global::lcd_screen.print("Aim Bot v1.0");
+      Global::lcd_screen.setCursor(0, 1);
+      Global::lcd_screen.print("Activate");
+      Global::lcd_screen.setCursor(11, 1);
+      Global::lcd_screen.write(ICON_WALL);
+      Utils::PrintWithMoreSpaces(Arrays::kState[Global::aim_bot_state], 4);
+      break;
+    }
+
     default: {
       Global::lcd_screen.print("Error:");
       Global::lcd_screen.setCursor(0, 1);
@@ -214,6 +224,11 @@ void LoadIcons() {
     }
 
     case MENU_PAGE_TRIGGER: {
+      Global::lcd_screen.createChar(ICON_WALL, Bytes::kWall);
+      break;
+    }
+
+    case MENU_PAGE_AIM: {
       Global::lcd_screen.createChar(ICON_WALL, Bytes::kWall);
       break;
     }
@@ -292,6 +307,17 @@ inline void OnKpUpClicked() {
       break;
     }
 
+    case MENU_PAGE_AIM: {
+      if (Global::is_anything_selected) {
+        ++Global::aim_bot_state;
+        if (Global::aim_bot_state >= AIM_MAX) {
+          Global::aim_bot_state = 0;
+        }
+        Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+      }
+      break;
+    }
+
     default: {
       // TODO(sn0wyQ): Display some error
       break;
@@ -361,6 +387,18 @@ inline void OnKpDownClicked() {
       break;
     }
 
+    case MENU_PAGE_AIM: {
+      if (Global::is_anything_selected) {
+        if (Global::aim_bot_state == 0) {
+          Global::aim_bot_state = AIM_MAX - 1;
+        } else {
+          --Global::aim_bot_state;
+        }
+        Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+      }
+      break;
+    }
+
     default: {
       // TODO(sn0wyQ): Display some error
       break;
@@ -402,6 +440,16 @@ inline void OnKpSelectClicked() {
     }
 
     case MENU_PAGE_TRIGGER: {
+      Global::is_anything_selected = !Global::is_anything_selected;
+      if (Global::is_anything_selected) {
+        Utils::StartBlinking(12, 1);
+      } else {
+        Utils::StopBlinking();
+      }
+      break;
+    }
+
+    case MENU_PAGE_AIM: {
       Global::is_anything_selected = !Global::is_anything_selected;
       if (Global::is_anything_selected) {
         Utils::StartBlinking(12, 1);
