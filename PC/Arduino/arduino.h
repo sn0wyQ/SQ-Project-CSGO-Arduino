@@ -33,6 +33,8 @@ class Arduino {
 
   static bool GetDevice(LPCSTR friendly_name, LPSTR com_port);
 
+  static void CheckArduinoOutput();
+
  private:
   Arduino() = default;
   ~Arduino();

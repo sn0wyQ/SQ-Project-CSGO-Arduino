@@ -126,3 +126,21 @@ bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
 
   return false;
 }
+
+void Arduino::CheckArduinoOutput() {
+  char output;
+  if (Arduino::ReadByte(&output)) {
+    switch (output) {
+      case ER_UNKNOWN_CMD: {
+        Utils::Log("[ARDUINO] Internal Error: unknown command");
+        break;
+      }
+
+      default: {
+        Utils::Log("[ARDUINO] Error: Output \"%\" can not be recognized as "
+                   "a command", output);
+        break;
+      }
+    }
+  }
+}
