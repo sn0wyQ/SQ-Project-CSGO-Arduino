@@ -1,5 +1,5 @@
-#ifndef TRIGGER_BOT_H_
-#define TRIGGER_BOT_H_
+#ifndef PC_FEATURES_TRIGGER_BOT_H_
+#define PC_FEATURES_TRIGGER_BOT_H_
 
 #include "SDK/Entity/LocalPlayer/local_player.h"
 #include "SDK/Entity/entity.h"
@@ -29,4 +29,4 @@ inline void TriggerBot(const LocalPlayer& local_player,
   Arduino::SendCommand(CMD_SHOOT);
 }
 
-#endif  // TRIGGER_BOT_H_
+#endif  // PC_FEATURES_TRIGGER_BOT_H_

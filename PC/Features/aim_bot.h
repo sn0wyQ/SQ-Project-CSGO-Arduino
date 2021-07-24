@@ -1,5 +1,5 @@
-#ifndef AIM_BOT_H_
-#define AIM_BOT_H_
+#ifndef PC_FEATURES_AIM_BOT_H_
+#define PC_FEATURES_AIM_BOT_H_
 
 #include <utility>
 
@@ -27,4 +27,4 @@ inline void AimBot(const LocalPlayer& local_player,
   Arduino::SendCommand(CMD_AIM, {mouse_delta.first, mouse_delta.second});
 }
 
-#endif  // AIM_BOT_H_
+#endif  // PC_FEATURES_AIM_BOT_H_

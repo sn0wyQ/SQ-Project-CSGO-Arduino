@@ -1,5 +1,5 @@
-#ifndef BUNNY_HOP_H_
-#define BUNNY_HOP_H_
+#ifndef PC_FEATURES_BUNNY_HOP_H_
+#define PC_FEATURES_BUNNY_HOP_H_
 
 #include "SDK/Entity/LocalPlayer/local_player.h"
 
@@ -19,4 +19,4 @@ inline void BunnyHop(const LocalPlayer& local_player) {
   Arduino::SendCommand(CMD_JUMP);
 }
 
-#endif  // BUNNY_HOP_H_
+#endif  // PC_FEATURES_BUNNY_HOP_H_
