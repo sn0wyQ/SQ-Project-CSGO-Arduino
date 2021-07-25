@@ -19,8 +19,11 @@
 #define CMD_INFO  4  // n - number of NOT dormant enemies (hp, weapon, position)
 #define CMD_MAX   5
 
-// Error codes
-#define ER_UNKNOWN_CMD 1
+// Response codes
+// -- Errors
+#define ARD_ER_UNKNOWN_CMD  1
+// -- Arduino Commands
+#define ARD_CMD_SET_BONE    20
 
 class Arduino {
  public:
