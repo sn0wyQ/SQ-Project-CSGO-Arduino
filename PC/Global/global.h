@@ -1,7 +1,7 @@
 #ifndef PC_GLOBAL_GLOBAL_H_
 #define PC_GLOBAL_GLOBAL_H_
 
-#include <cstdint>
+#include <vector>
 
 #include "Arduino/arduino.h"
 
