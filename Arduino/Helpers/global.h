@@ -11,7 +11,7 @@ namespace Global {
 LiquidCrystal lcd_screen
     (LCD_PIN_RS, LCD_PIN_EN, LCD_PIN_D4, LCD_PIN_D5, LCD_PIN_D6, LCD_PIN_D7);
 
-unsigned int prev_press = 0;
+unsigned long prev_press = 0;
 
 bool is_anything_selected = false;
 bool need_to_update_screen = true;
