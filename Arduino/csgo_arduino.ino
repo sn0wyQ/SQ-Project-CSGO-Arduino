@@ -58,6 +58,11 @@ void loop() {
         break;
       }
 
+      case CMD_UPDATE: {
+        Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
+        break;
+      }
+
       default: {
         Utils::SendResponse(ARD_ER_UNKNOWN_CMD);
         break;

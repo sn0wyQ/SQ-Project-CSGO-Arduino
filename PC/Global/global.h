@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include "Arduino/arduino.h"
-
 namespace Global {
 
 // Buttons

@@ -2,6 +2,10 @@
 
 HANDLE Arduino::arduino_handle_ = nullptr;
 
+Arduino::~Arduino() {
+  CloseHandle(arduino_handle_);
+}
+
 void Arduino::Connect(LPCSTR com_port) {
   arduino_handle_ = CreateFile(com_port,
                                GENERIC_READ | GENERIC_WRITE,
@@ -48,11 +52,13 @@ void Arduino::Connect(LPCSTR com_port) {
     return;
   }
 
+  Arduino::UpdateConfig();
+
   Utils::Log("[ARDUINO] Connected to Arduino Leonardo at %\n", com_port);
 }
 
-Arduino::~Arduino() {
-  CloseHandle(arduino_handle_);
+void Arduino::UpdateConfig() {
+  Arduino::SendCommand(CMD_UPDATE);
 }
 
 bool Arduino::SendCommand(char cmd_index, const std::vector<char>& params) {

@@ -10,14 +10,16 @@
 #include <string>
 #include <vector>
 
+#include "Global/global.h"
 #include "Utils/utils.h"
 
 // Commands
-#define CMD_JUMP  1  // No arguments
-#define CMD_SHOOT 2  // No arguments
-#define CMD_AIM   3  // x, y -> how much to move mouse to in X and Y axis
-#define CMD_INFO  4  // n - number of NOT dormant enemies (hp, weapon, position)
-#define CMD_MAX   5
+#define CMD_JUMP    1  // No arguments
+#define CMD_SHOOT   2  // No arguments
+#define CMD_AIM     3  // x, y -> how much to move mouse to in X and Y axis
+#define CMD_INFO    4  // n - number of NOT dormant enemies, then n player_infos
+#define CMD_UPDATE  5  // No arguments
+#define CMD_MAX     6
 
 // Response codes
 // -- Errors
@@ -28,6 +30,8 @@
 class Arduino {
  public:
   static void Connect(LPCSTR com_port);
+
+  static void UpdateConfig();
 
   static bool SendCommand(char cmd_index, const std::vector<char>& params = {});
   static bool SendData(const char* data, SIZE_T data_size);
