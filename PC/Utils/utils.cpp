@@ -36,10 +36,10 @@ char ClampFloatToChar(float x) {
   return static_cast<char>(x);
 }
 
-std::pair<char, char>
-    Utils::AngleDiffToMouseDelta(const AbstractLocalPlayer& local_player,
-                                 const Vector& angle,
-                                 float distance) {
+std::pair<char, char> Utils::AngleDiffToMouseDelta(
+    const AbstractLocalPlayer& local_player,
+    const Vector& angle,
+    float distance) {
   float sensitivity = local_player.GetSensitivity();
   // We multiply by 10.f so aim is NOT so slow
   float coef = (distance * 10.f) / sensitivity;
