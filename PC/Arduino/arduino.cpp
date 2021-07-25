@@ -131,14 +131,22 @@ void Arduino::CheckArduinoOutput() {
   char output;
   if (Arduino::ReadByte(&output)) {
     switch (output) {
-      case ER_UNKNOWN_CMD: {
+      case ARD_ER_UNKNOWN_CMD: {
         Utils::Log("[ARDUINO] Internal Error: unknown command");
+        break;
+      }
+
+      case ARD_CMD_SET_BONE: {
+        if (Arduino::ReadByte(&output)) {
+          Global::aim_bot_bone = Global::kBones[output];
+          Utils::Log("[AIM BOT] Set bone to %", Global::aim_bot_bone);
+        }
         break;
       }
 
       default: {
         Utils::Log("[ARDUINO] Error: Output \"%\" can not be recognized as "
-                   "a command", output);
+                   "a valid response", output);
         break;
       }
     }

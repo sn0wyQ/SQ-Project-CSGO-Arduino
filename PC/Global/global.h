@@ -12,9 +12,15 @@ extern int bhop_button;
 extern int trigger_bot_button;
 extern int aim_bot_button;
 
+// Settings
+extern int aim_bot_bone;
+
 // Window size
 extern float window_w;
 extern float window_h;
+
+// Aim bones
+extern const std::vector<int> kBones;
 
 }  // namespace Global
 

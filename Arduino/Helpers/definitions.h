@@ -40,8 +40,11 @@
 #define CMD_AIM   3
 #define CMD_INFO  4
 
-// Error codes
-#define ER_UNKNOWN_CMD 1
+// Response codes
+// -- Errors
+#define ARD_ER_UNKNOWN_CMD  1
+// -- Arduino Commands
+#define ARD_CMD_SET_BONE    20
 
 // Menu pages
 #define MENU_PAGE_WH       0
@@ -78,10 +81,22 @@
 
 #define TRIGGER_MAX_DELAY 999
 
+// AimBot pages
+#define AIM_PAGE_STATE  0
+#define AIM_PAGE_BONE   1
+#define AIM_PAGE_MAX    2
+
 // AimBot states
 #define AIM_OFF 0
 #define AIM_ON  1
 #define AIM_MAX 2
+
+// AimBot Bones
+#define AIM_BONE_STOMACH  0
+#define AIM_BONE_CHEST    1
+#define AIM_BONE_NECK     2
+#define AIM_BONE_HEAD     3
+#define AIM_BONE_MAX      4
 
 // Settings addresses
 // -- BunnyHop
@@ -91,6 +106,7 @@
 #define TRIGGER_DELAY_ADDR  2  // (size - 4 bytes)
 // -- AimBot
 #define AIM_STATE_ADDR      6  // (size - 1 byte)
+#define AIM_BONE_ADDR       7  // (size - 1 byte)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127

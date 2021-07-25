@@ -6,14 +6,21 @@
 namespace Arrays {
 
 const String kState[] {
-    "OFF",
-    "ON"
+    "Off",
+    "On",
 };
 
 const String kBhopBtns[] {
-  "OFF",
-  "SPACE",
-  "MWHUP"
+  "Off",
+  "Space",
+  "MwhUp",
+};
+
+const String kBoneNames[] {
+  "Stomach",
+  "Chest",
+  "Neck",
+  "Head",
 };
 
 }  // namespace Arrays

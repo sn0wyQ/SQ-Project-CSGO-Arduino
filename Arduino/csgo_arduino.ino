@@ -18,12 +18,7 @@ void setup() {
   Mouse.begin();
   Keyboard.begin();
 
-  Utils::Load(BHOP_BTN_ADDR, &Global::bhop_button);
-
-  Utils::Load(TRIGGER_STATE_ADDR, &Global::trigger_bot_state);
-  Utils::Load(TRIGGER_DELAY_ADDR, &Global::trigger_bot_delay);
-
-  Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
+  Utils::LoadAllSettings();
 }
 
 void loop() {
@@ -64,7 +59,7 @@ void loop() {
       }
 
       default: {
-        Utils::Error(ER_UNKNOWN_CMD);
+        Utils::SendResponse(ARD_ER_UNKNOWN_CMD);
         break;
       }
     }

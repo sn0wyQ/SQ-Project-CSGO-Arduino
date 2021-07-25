@@ -37,8 +37,7 @@ int main() {
   Utils::Log("[ARDUINO] Trying to find Arduino Leonardo...");
   Timer finding_arduino_timer;
   bool found_arduino = false;
-  while (finding_arduino_timer.GetElapsedS() < 30.f
-         && !found_arduino) {
+  while (finding_arduino_timer.GetElapsedS() < 30.f && !found_arduino) {
     char com_port[256] = R"(\\.\)";
     found_arduino = Arduino::GetDevice("Arduino Leonardo", com_port);
     if (found_arduino) {
@@ -65,15 +64,13 @@ int main() {
   }
   Module client = Memory::GetModule("client.dll");
   Module engine = Memory::GetModule("engine.dll");
-  Utils::Log("[MEMORY] Successfully attached to CS:GO process:");
-  Utils::Log("\tClient base: %\n\tClient size: %", client.base, client.size);
-  Utils::Log("\tEngine base: %\n\tEngine size: %\n", engine.base, engine.size);
+  Utils::Log("[MEMORY] Successfully attached to CS:GO process!");
 
   Utils::GetKey(&Global::bhop_button, "Bunny Hop");
   Utils::GetKey(&Global::trigger_bot_button, "Trigger Bot");
   Utils::GetKey(&Global::aim_bot_button, "Aim Bot");
 
-  Utils::Log("Cheat started successfully!\n");
+  Utils::Log("[CHEAT] Cheat started successfully!\n");
 
   while (true) {
     Loop(client, engine);

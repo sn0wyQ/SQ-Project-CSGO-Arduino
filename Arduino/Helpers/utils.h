@@ -1,6 +1,8 @@
 #ifndef ARDUINO_HELPERS_UTILS_H_
 #define ARDUINO_HELPERS_UTILS_H_
 
+#include <stdarg.h>
+
 #include <Arduino.h>
 #include <EEPROM.h>
 
@@ -12,13 +14,12 @@
 namespace Utils {
 
 inline byte GetKeypadButton() {
-  static unsigned int prev_press = millis();
   int adc_key_in = analogRead(0);
-  if (millis() - prev_press > 250) {
+  if (millis() - Global::prev_press > 250) {
     if (adc_key_in >= 700) {
       return KP_NONE;
     }
-    prev_press = millis();
+    Global::prev_press = millis();
     if (adc_key_in < 30) {
       return KP_RIGHT;
     } else if (adc_key_in > 70 && adc_key_in < 150) {
@@ -44,9 +45,27 @@ void Load(int address, T* data) {
   EEPROM.get(address, *data);
 }
 
-void Error(char error_code) {
+inline void LoadAllSettings() {
+  Utils::Load(BHOP_BTN_ADDR, &Global::bhop_button);
+
+  Utils::Load(TRIGGER_STATE_ADDR, &Global::trigger_bot_state);
+  Utils::Load(TRIGGER_DELAY_ADDR, &Global::trigger_bot_delay);
+
+  Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
+  Utils::Load(AIM_BONE_ADDR, &Global::aim_bot_bone);
+}
+
+void SendResponse(char response) {
   if (Serial.availableForWrite()) {
-    Serial.write(error_code);
+    Serial.write(response);
+  }
+}
+
+template <class ...Ts>
+void SendResponse(char response, const Ts& ...args) {
+  if (Serial.availableForWrite()) {
+    Serial.write(response);
+    Serial.write(args...);
   }
 }
 
@@ -179,12 +198,31 @@ inline void UpdateScreen() {
     }
 
     case MENU_PAGE_AIM: {
-      Global::lcd_screen.print("Aim Bot v1.0");
+      Global::lcd_screen.print("Aim Bot v1.1");
       Global::lcd_screen.setCursor(0, 1);
-      Global::lcd_screen.print("Activate");
-      Global::lcd_screen.setCursor(11, 1);
-      Global::lcd_screen.write(ICON_WALL);
-      Utils::PrintWithMoreSpaces(Arrays::kState[Global::aim_bot_state], 4);
+      switch (Global::aim_bot_page) {
+        case AIM_PAGE_STATE: {
+          Global::lcd_screen.print("Activate");
+          Global::lcd_screen.setCursor(11, 1);
+          Global::lcd_screen.write(ICON_WALL);
+          Utils::PrintWithMoreSpaces(Arrays::kState[Global::aim_bot_state], 4);
+          break;
+        }
+
+        case AIM_PAGE_BONE: {
+          Global::lcd_screen.print("Bone");
+          Global::lcd_screen.setCursor(7, 1);
+          Global::lcd_screen.write(ICON_WALL);
+          Utils::PrintWithMoreSpaces(Arrays::kBoneNames[Global::aim_bot_bone],
+                                     8);
+          break;
+        }
+
+        default: {
+          // TODO(sn0wyQ): Display some error
+          break;
+        }
+      }
       break;
     }
 
@@ -309,11 +347,36 @@ inline void OnKpUpClicked() {
 
     case MENU_PAGE_AIM: {
       if (Global::is_anything_selected) {
-        ++Global::aim_bot_state;
-        if (Global::aim_bot_state >= AIM_MAX) {
-          Global::aim_bot_state = 0;
+        switch (Global::aim_bot_page) {
+          case AIM_PAGE_STATE: {
+            ++Global::aim_bot_state;
+            if (Global::aim_bot_state >= AIM_MAX) {
+              Global::aim_bot_state = 0;
+            }
+            Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+            break;
+          }
+
+          case AIM_PAGE_BONE: {
+            ++Global::aim_bot_bone;
+            if (Global::aim_bot_bone >= AIM_BONE_MAX) {
+              Global::aim_bot_bone = 0;
+            }
+            Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
+            Utils::Save(AIM_BONE_ADDR, Global::aim_bot_bone);
+            break;
+          }
+
+          default: {
+            // TODO(sn0wyQ): Display some error
+            break;
+          }
         }
-        Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+      } else {
+        ++Global::aim_bot_page;
+        if (Global::aim_bot_page >= AIM_PAGE_MAX) {
+          Global::aim_bot_page = 0;
+        }
       }
       break;
     }
@@ -389,12 +452,37 @@ inline void OnKpDownClicked() {
 
     case MENU_PAGE_AIM: {
       if (Global::is_anything_selected) {
-        if (Global::aim_bot_state == 0) {
-          Global::aim_bot_state = AIM_MAX - 1;
-        } else {
-          --Global::aim_bot_state;
+        switch (Global::aim_bot_page) {
+          case AIM_PAGE_STATE: {
+            if (Global::aim_bot_state == 0) {
+              Global::aim_bot_state = AIM_MAX - 1;
+            } else {
+              --Global::aim_bot_state;
+            }
+            Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+          }
+
+          case AIM_PAGE_BONE: {
+            if (Global::aim_bot_bone == 0) {
+              Global::aim_bot_bone = AIM_BONE_MAX - 1;
+            } else {
+              --Global::aim_bot_bone;
+            }
+            Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
+            Utils::Save(AIM_BONE_ADDR, Global::aim_bot_bone);
+          }
+
+          default: {
+            // TODO(sn0wyQ): Display some error
+            break;
+          }
         }
-        Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+      } else {
+        if (Global::aim_bot_page == 0) {
+          Global::aim_bot_page = AIM_PAGE_MAX - 1;
+        } else {
+          --Global::aim_bot_page;
+        }
       }
       break;
     }
@@ -452,7 +540,22 @@ inline void OnKpSelectClicked() {
     case MENU_PAGE_AIM: {
       Global::is_anything_selected = !Global::is_anything_selected;
       if (Global::is_anything_selected) {
-        Utils::StartBlinking(12, 1);
+        switch (Global::aim_bot_page) {
+          case AIM_PAGE_STATE: {
+            Utils::StartBlinking(12, 1);
+            break;
+          }
+
+          case AIM_PAGE_BONE: {
+            Utils::StartBlinking(8, 1);
+            break;
+          }
+
+          default: {
+            // TODO(sn0wyQ): Display some error
+            break;
+          }
+        }
       } else {
         Utils::StopBlinking();
       }
