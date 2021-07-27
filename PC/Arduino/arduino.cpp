@@ -91,6 +91,16 @@ bool Arduino::ReadByte(char* byte) {
   return (bytes_read == 1);
 }
 
+bool Arduino::Read32Bits(void* data) {
+  DWORD bytes_read;
+  ReadFile(arduino_handle_,
+           data,
+           4,
+           &bytes_read,
+           nullptr);
+  return (bytes_read == 4);
+}
+
 bool Arduino::GetDevice(LPCSTR friendly_name, LPSTR com_port) {
   HDEVINFO device_info = SetupDiGetClassDevs(&GUID_DEVCLASS_PORTS,
                                              nullptr,
@@ -146,6 +156,15 @@ void Arduino::CheckArduinoOutput() {
         if (Arduino::ReadByte(&output)) {
           Global::aim_bot_bone = Global::kBones[output];
           Utils::Log("[AIM BOT] Set bone to %", Global::aim_bot_bone);
+        }
+        break;
+      }
+
+      case ARD_CMD_SET_FOV: {
+        float new_fov;
+        if (Arduino::Read32Bits(&new_fov)) {
+          Global::aim_bot_fov = new_fov;
+          Utils::Log("[AIM BOT] Set FOV to %", Global::aim_bot_fov);
         }
         break;
       }

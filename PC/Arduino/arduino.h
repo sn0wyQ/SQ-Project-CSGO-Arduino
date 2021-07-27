@@ -26,6 +26,7 @@
 #define ARD_ER_UNKNOWN_CMD  1
 // -- Arduino Commands
 #define ARD_CMD_SET_BONE    20
+#define ARD_CMD_SET_FOV     21
 
 class Arduino {
  public:
@@ -37,6 +38,7 @@ class Arduino {
   static bool SendData(const char* data, SIZE_T data_size);
 
   static bool ReadByte(char* byte);
+  static bool Read32Bits(void* data);
 
   static bool GetDevice(LPCSTR friendly_name, LPSTR com_port);
 
