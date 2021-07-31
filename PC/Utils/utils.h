@@ -1,6 +1,7 @@
 #ifndef PC_UTILS_UTILS_H_
 #define PC_UTILS_UTILS_H_
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <utility>
