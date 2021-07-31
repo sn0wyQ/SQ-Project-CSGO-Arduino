@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <HID.h>
 #include <Keyboard.h>
 #include <LiquidCrystal.h>
 #include <Mouse.h>
@@ -60,6 +59,7 @@ void loop() {
 
       case CMD_UPDATE: {
         Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
+        Utils::SendResponse32(ARD_CMD_SET_FOV, Global::aim_bot_fov);
         break;
       }
 

@@ -32,12 +32,13 @@ byte bhop_button = BHOP_OFF;
 
 byte trigger_bot_page = TRIGGER_PAGE_STATE;
 byte trigger_bot_state = TRIGGER_OFF;
-int trigger_bot_delay = 0;
-unsigned int trigger_bot_delay_start = 0;
+int16_t trigger_bot_delay = 0;
+uint32_t trigger_bot_delay_start = 0;
 
 byte aim_bot_page = AIM_PAGE_STATE;
 byte aim_bot_state = AIM_OFF;
 byte aim_bot_bone = AIM_BONE_HEAD;
+float aim_bot_fov = 5.f;
 
 }  // namespace Global
 

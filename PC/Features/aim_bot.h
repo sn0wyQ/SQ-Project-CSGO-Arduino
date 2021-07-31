@@ -20,7 +20,7 @@ inline void AimBot(const LocalPlayer& local_player,
   std::pair<Vector, float> angle_diff_and_distance =
       local_player.GetAimAngleDiffAndDistance(entity_list,
                                               Global::aim_bot_bone,
-                                              20.f);
+                                              Global::aim_bot_fov);
   Vector angle_diff = angle_diff_and_distance.first;
   float distance = angle_diff_and_distance.second;
 

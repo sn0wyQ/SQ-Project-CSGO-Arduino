@@ -9,12 +9,16 @@ void Utils::GetKey(int* final_key_code, const char* purpose) {
     std::cout << "Enter key code for " << purpose << ": ";
     int key_code;
     std::cin >> key_code;
-    Utils::Log("Selected key is %", Arrays::kKeyNames.at(key_code));
-    std::cout << "OK? (y/n): ";
-    char answer;
-    std::cin >> answer;
-    if (answer == 'y' || answer == 'Y') {
-      *final_key_code = key_code;
+    if (Arrays::kKeyNames.find(key_code) == Arrays::kKeyNames.end()) {
+      Utils::Log("Can NOT associate entered key code with any key!");
+    } else {
+      Utils::Log("Selected key is %", Arrays::kKeyNames.at(key_code));
+      std::cout << "OK? (y/n): ";
+      char answer;
+      std::cin >> answer;
+      if (answer == 'y' || answer == 'Y') {
+        *final_key_code = key_code;
+      }
     }
     std::cout << std::endl;
   }
@@ -36,16 +40,30 @@ char ClampFloatToChar(float x) {
   return static_cast<char>(x);
 }
 
-std::pair<char, char>
-    Utils::AngleDiffToMouseDelta(const AbstractLocalPlayer& local_player,
-                                 const Vector& angle,
-                                 float distance) {
+std::pair<char, char> Utils::AngleDiffToMouseDelta(
+    const AbstractLocalPlayer& local_player,
+    const Vector& angle,
+    float distance) {
+  float delta_x = -std::sin(DegToRad(angle.y)) * distance;
+  float delta_y = std::sin(DegToRad(angle.x)) * distance;
+
+  float crosshair_dist = std::sqrt((delta_x * delta_x) + (delta_y * delta_y));
+  // If crosshair_dist is small than we need more precision in mouse movement
+  // => we make mouse move slower when crosshair comes closer to target
+  float speed = (crosshair_dist < 30.f ? 5.f : 15.f);
+  // And even more precision if we are far from target
+  if (distance > 1024.f) {
+    speed *= 0.25f;
+  } else if (distance > 512.f) {
+    speed *= 0.5f;
+  } else if (distance > 256.f) {
+    speed *= 0.75f;
+  }
+
   float sensitivity = local_player.GetSensitivity();
-  // We multiply by 10.f so aim is NOT so slow
-  float coef = (distance * 10.f) / sensitivity;
+  float coef = speed / sensitivity;
+  delta_x *= coef;
+  delta_y *= coef;
 
-  float delta_x = ClampFloatToChar(-std::sin(DegToRad(angle.y)) * coef);
-  float delta_y = ClampFloatToChar(std::sin(DegToRad(angle.x)) * coef);
-
-  return std::make_pair(static_cast<char>(delta_x), static_cast<char>(delta_y));
+  return std::make_pair(ClampFloatToChar(delta_x), ClampFloatToChar(delta_y));
 }

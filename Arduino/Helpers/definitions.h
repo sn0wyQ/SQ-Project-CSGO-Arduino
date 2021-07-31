@@ -17,6 +17,8 @@
 #define KP_SELECT 4
 #define KP_NONE   5
 
+#define KP_PRESS_DELAY 175
+
 // Icons
 // -- WallHack page
 #define ICON_WALL         byte(0)
@@ -46,6 +48,7 @@
 #define ARD_ER_UNKNOWN_CMD  1
 // -- Arduino Commands
 #define ARD_CMD_SET_BONE    20
+#define ARD_CMD_SET_FOV     21
 
 // Menu pages
 #define MENU_PAGE_WH       0
@@ -85,7 +88,8 @@
 // AimBot pages
 #define AIM_PAGE_STATE  0
 #define AIM_PAGE_BONE   1
-#define AIM_PAGE_MAX    2
+#define AIM_PAGE_FOV    2
+#define AIM_PAGE_MAX    3
 
 // AimBot states
 #define AIM_OFF 0
@@ -104,10 +108,11 @@
 #define BHOP_BTN_ADDR       0  // (size - 1 byte)
 // -- TriggerBot
 #define TRIGGER_STATE_ADDR  1  // (size - 1 byte)
-#define TRIGGER_DELAY_ADDR  2  // (size - 4 bytes)
+#define TRIGGER_DELAY_ADDR  2  // (size - 2 bytes)
 // -- AimBot
-#define AIM_STATE_ADDR      6  // (size - 1 byte)
-#define AIM_BONE_ADDR       7  // (size - 1 byte)
+#define AIM_STATE_ADDR      4  // (size - 1 byte)
+#define AIM_BONE_ADDR       5  // (size - 1 byte)
+#define AIM_FOV_ADDR        6  // (size - 4 bytes)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127

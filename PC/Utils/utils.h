@@ -1,6 +1,7 @@
 #ifndef PC_UTILS_UTILS_H_
 #define PC_UTILS_UTILS_H_
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <utility>
@@ -33,10 +34,10 @@ void GetKey(int* final_key_code, const char* purpose);
 
 bool IsHeld(int key_code);
 
-std::pair<char, char>
-    AngleDiffToMouseDelta(const AbstractLocalPlayer& local_player,
-                          const Vector& angle,
-                          float distance);
+std::pair<char, char> AngleDiffToMouseDelta(
+    const AbstractLocalPlayer& local_player,
+    const Vector& angle,
+    float distance);
 
 }  // namespace Utils
 

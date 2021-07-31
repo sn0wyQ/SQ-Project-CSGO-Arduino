@@ -12,6 +12,7 @@ extern int aim_bot_button;
 
 // Settings
 extern int aim_bot_bone;
+extern float aim_bot_fov;
 
 // Window size
 extern float window_w;

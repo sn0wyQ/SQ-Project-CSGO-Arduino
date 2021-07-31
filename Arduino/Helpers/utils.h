@@ -15,7 +15,7 @@ namespace Utils {
 
 inline byte GetKeypadButton() {
   int adc_key_in = analogRead(0);
-  if (millis() - Global::prev_press > 250) {
+  if (millis() - Global::prev_press > KP_PRESS_DELAY) {
     if (adc_key_in >= 700) {
       return KP_NONE;
     }
@@ -53,6 +53,7 @@ inline void LoadAllSettings() {
 
   Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
   Utils::Load(AIM_BONE_ADDR, &Global::aim_bot_bone);
+  Utils::Load(AIM_FOV_ADDR, &Global::aim_bot_fov);
 }
 
 void SendResponse(char response) {
@@ -61,11 +62,31 @@ void SendResponse(char response) {
   }
 }
 
+// Args all must be of 1 byte sized data type (char, byte, uint8_t, etc.)
 template <class ...Ts>
 void SendResponse(char response, const Ts& ...args) {
   if (Serial.availableForWrite()) {
     Serial.write(response);
     Serial.write(args...);
+  }
+}
+
+template <class T>
+void Send32Bits(T x) {
+  // Byte magic
+  auto* ptr = reinterpret_cast<int32_t*>(&x);
+  Serial.write((*ptr) & 0xFF);
+  Serial.write((*ptr >> 8) & 0xFF);
+  Serial.write((*ptr >> 16) & 0xFF);
+  Serial.write((*ptr >> 24) & 0xFF);
+}
+
+// Args all must be of 4 byte sized data type (float, int32_t, etc.)
+template <class ...Ts>
+void SendResponse32(char response, const Ts& ...args) {
+  if (Serial.availableForWrite()) {
+    Serial.write(response);
+    Send32Bits(args...);
   }
 }
 
@@ -90,6 +111,14 @@ void PrintWithMoreSpaces(const String& str, byte wanted_length) {
 
 void PrintWithMoreZeros(int value, byte wanted_length) {
   String str(value);
+  for (byte i = wanted_length - str.length(); i > 0; --i) {
+    Global::lcd_screen.write('0');
+  }
+  Global::lcd_screen.print(str);
+}
+
+void PrintWithMoreZeros(float value, byte wanted_length, byte decimals) {
+  String str(value, decimals);
   for (byte i = wanted_length - str.length(); i > 0; --i) {
     Global::lcd_screen.write('0');
   }
@@ -198,7 +227,7 @@ inline void UpdateScreen() {
     }
 
     case MENU_PAGE_AIM: {
-      Global::lcd_screen.print("Aim Bot v1.1");
+      Global::lcd_screen.print("Aim Bot v1.2");
       Global::lcd_screen.setCursor(0, 1);
       switch (Global::aim_bot_page) {
         case AIM_PAGE_STATE: {
@@ -215,6 +244,15 @@ inline void UpdateScreen() {
           Global::lcd_screen.write(ICON_WALL);
           Utils::PrintWithMoreSpaces(Arrays::kBoneNames[Global::aim_bot_bone],
                                      8);
+          break;
+        }
+
+        case AIM_PAGE_FOV: {
+          Global::lcd_screen.print("FOV");
+          Global::lcd_screen.setCursor(9, 1);
+          Global::lcd_screen.write(ICON_WALL);
+          Global::lcd_screen.write(' ');
+          Utils::PrintWithMoreZeros(Global::aim_bot_fov, 5, 2);
           break;
         }
 
@@ -367,6 +405,27 @@ inline void OnKpUpClicked() {
             break;
           }
 
+          case AIM_PAGE_FOV: {
+            if (Global::aim_bot_fov < 0.999f) {
+              Global::aim_bot_fov = 60.f;
+            } else if (Global::aim_bot_fov < 1.999f) {
+              Global::aim_bot_fov += 0.1f;
+            } else if (Global::aim_bot_fov < 4.999f) {
+              Global::aim_bot_fov += 0.25f;
+            } else if (Global::aim_bot_fov < 9.999f) {
+              Global::aim_bot_fov += 0.5f;
+            } else if (Global::aim_bot_fov < 19.999f) {
+              Global::aim_bot_fov += 1.f;
+            } else if (Global::aim_bot_fov < 59.999f) {
+              Global::aim_bot_fov += 5.f;
+            } else {
+              Global::aim_bot_fov = 1.f;
+            }
+            Utils::SendResponse32(ARD_CMD_SET_FOV, Global::aim_bot_fov);
+            Utils::Save(AIM_FOV_ADDR, Global::aim_bot_fov);
+            break;
+          }
+
           default: {
             // TODO(sn0wyQ): Display some error
             break;
@@ -460,6 +519,7 @@ inline void OnKpDownClicked() {
               --Global::aim_bot_state;
             }
             Utils::Save(AIM_STATE_ADDR, Global::aim_bot_state);
+            break;
           }
 
           case AIM_PAGE_BONE: {
@@ -470,6 +530,28 @@ inline void OnKpDownClicked() {
             }
             Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
             Utils::Save(AIM_BONE_ADDR, Global::aim_bot_bone);
+            break;
+          }
+
+          case AIM_PAGE_FOV: {
+            if (Global::aim_bot_fov < 1.001f) {
+              Global::aim_bot_fov = 60.f;
+            } else if (Global::aim_bot_fov < 2.001f) {
+              Global::aim_bot_fov -= 0.1f;
+            } else if (Global::aim_bot_fov < 5.001f) {
+              Global::aim_bot_fov -= 0.25f;
+            } else if (Global::aim_bot_fov < 10.001f) {
+              Global::aim_bot_fov -= 0.5f;
+            } else if (Global::aim_bot_fov < 20.001f) {
+              Global::aim_bot_fov -= 1.f;
+            } else if (Global::aim_bot_fov < 60.001f) {
+              Global::aim_bot_fov -= 5.f;
+            } else {
+              Global::aim_bot_fov = 1.f;
+            }
+            Utils::SendResponse32(ARD_CMD_SET_FOV, Global::aim_bot_fov);
+            Utils::Save(AIM_FOV_ADDR, Global::aim_bot_fov);
+            break;
           }
 
           default: {
@@ -548,6 +630,11 @@ inline void OnKpSelectClicked() {
 
           case AIM_PAGE_BONE: {
             Utils::StartBlinking(8, 1);
+            break;
+          }
+
+          case AIM_PAGE_FOV: {
+            Utils::StartBlinking(10, 1);
             break;
           }
 
