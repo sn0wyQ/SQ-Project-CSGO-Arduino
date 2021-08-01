@@ -41,7 +41,10 @@ Setup keys following instructions in application.
 Adjust settings using your Keypad Shield.
 
 # Short video
-// TODO
+Click on image below to watch it on YouTube
+
+[![Video](http://img.youtube.com/vi/03OUp3qoWKg/0.jpg)](http://www.youtube.com/watch?v=03OUp3qoWKg)
+
 
 # Commiting your own code
 If you wish to support project by coding some new features you are more than welcome to do it, but you need to follow [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
