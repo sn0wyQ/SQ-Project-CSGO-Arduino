@@ -40,7 +40,7 @@ Setup keys following instructions in application.
 ## Step 7 (Optional)
 Adjust settings using your Keypad Shield.
 
-# Short video
+# Short video demo
 Click on image below to watch it on YouTube
 
 [![Video](http://img.youtube.com/vi/03OUp3qoWKg/0.jpg)](http://www.youtube.com/watch?v=03OUp3qoWKg)
