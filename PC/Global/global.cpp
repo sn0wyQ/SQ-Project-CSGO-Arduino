@@ -8,6 +8,7 @@ int Global::aim_bot_button = 0;
 // Settings
 int Global::aim_bot_bone = 8;  // Head by default
 float Global::aim_bot_fov = 5.f;
+float Global::aim_bot_smooth = 1.f;
 
 // Window size
 float Global::window_w = 1280;

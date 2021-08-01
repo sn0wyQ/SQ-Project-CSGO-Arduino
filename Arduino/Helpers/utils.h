@@ -54,6 +54,7 @@ inline void LoadAllSettings() {
   Utils::Load(AIM_STATE_ADDR, &Global::aim_bot_state);
   Utils::Load(AIM_BONE_ADDR, &Global::aim_bot_bone);
   Utils::Load(AIM_FOV_ADDR, &Global::aim_bot_fov);
+  Utils::Load(AIM_SMOOTH_ADDR, &Global::aim_bot_smooth);
 }
 
 void SendResponse(char response) {
@@ -227,7 +228,7 @@ inline void UpdateScreen() {
     }
 
     case MENU_PAGE_AIM: {
-      Global::lcd_screen.print("Aim Bot v1.2");
+      Global::lcd_screen.print("Aim Bot v1.3");
       Global::lcd_screen.setCursor(0, 1);
       switch (Global::aim_bot_page) {
         case AIM_PAGE_STATE: {
@@ -253,6 +254,15 @@ inline void UpdateScreen() {
           Global::lcd_screen.write(ICON_WALL);
           Global::lcd_screen.write(' ');
           Utils::PrintWithMoreZeros(Global::aim_bot_fov, 5, 2);
+          break;
+        }
+
+        case AIM_PAGE_SMOOTH: {
+          Global::lcd_screen.print("Smooth");
+          Global::lcd_screen.setCursor(9, 1);
+          Global::lcd_screen.write(ICON_WALL);
+          Global::lcd_screen.write(' ');
+          Utils::PrintWithMoreZeros(Global::aim_bot_smooth, 5, 2);
           break;
         }
 
@@ -426,6 +436,25 @@ inline void OnKpUpClicked() {
             break;
           }
 
+          case AIM_PAGE_SMOOTH: {
+            if (Global::aim_bot_smooth < 0.499f) {
+              Global::aim_bot_smooth = 15.f;
+            } else if (Global::aim_bot_smooth < 1.999f) {
+              Global::aim_bot_smooth += 0.1f;
+            } else if (Global::aim_bot_smooth < 4.999f) {
+              Global::aim_bot_smooth += 0.25f;
+            } else if (Global::aim_bot_smooth < 9.999f) {
+              Global::aim_bot_smooth += 0.5f;
+            } else if (Global::aim_bot_smooth < 14.999f) {
+              Global::aim_bot_smooth += 1.f;
+            } else {
+              Global::aim_bot_smooth = 0.5f;
+            }
+            Utils::SendResponse32(ARD_CMD_SET_SMOOTH, Global::aim_bot_smooth);
+            Utils::Save(AIM_SMOOTH_ADDR, Global::aim_bot_smooth);
+            break;
+          }
+
           default: {
             // TODO(sn0wyQ): Display some error
             break;
@@ -554,6 +583,25 @@ inline void OnKpDownClicked() {
             break;
           }
 
+          case AIM_PAGE_SMOOTH: {
+            if (Global::aim_bot_smooth < 0.501f) {
+              Global::aim_bot_smooth = 15.f;
+            } else if (Global::aim_bot_smooth < 2.001f) {
+              Global::aim_bot_smooth -= 0.1f;
+            } else if (Global::aim_bot_smooth < 5.001f) {
+              Global::aim_bot_smooth -= 0.25f;
+            } else if (Global::aim_bot_smooth < 10.001f) {
+              Global::aim_bot_smooth -= 0.5f;
+            } else if (Global::aim_bot_smooth < 15.001f) {
+              Global::aim_bot_smooth -= 1.f;
+            } else {
+              Global::aim_bot_smooth = 0.5f;
+            }
+            Utils::SendResponse32(ARD_CMD_SET_SMOOTH, Global::aim_bot_smooth);
+            Utils::Save(AIM_SMOOTH_ADDR, Global::aim_bot_smooth);
+            break;
+          }
+
           default: {
             // TODO(sn0wyQ): Display some error
             break;
@@ -633,7 +681,8 @@ inline void OnKpSelectClicked() {
             break;
           }
 
-          case AIM_PAGE_FOV: {
+          case AIM_PAGE_FOV:
+          case AIM_PAGE_SMOOTH: {
             Utils::StartBlinking(10, 1);
             break;
           }

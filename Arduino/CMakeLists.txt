@@ -35,14 +35,13 @@ set(${PROJECT_NAME}_SKETCH csgo_arduino.ino)
 set(${PROJECT_NAME}_ARDLIBS EEPROM HID Keyboard Mouse)
 
 # For nested library sources replace ${LIB_NAME} with library name for each library
-#set(_RECURSE true)
 set(HID_RECURSE true)
 set(Keyboard_RECURSE true)
 set(Mouse_RECURSE true)
 
 #### Additional settings for programmer. From programmers.txt
 set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-set(${PROJECT_NAME}_PORT COM13)
+set(${PROJECT_NAME}_PORT COM15)  # Maybe you will need to change it
 set(leonardo.upload.speed 128000)
 
 ## Verbose build process

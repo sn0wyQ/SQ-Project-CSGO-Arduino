@@ -27,6 +27,7 @@
 // -- Arduino Commands
 #define ARD_CMD_SET_BONE    20
 #define ARD_CMD_SET_FOV     21
+#define ARD_CMD_SET_SMOOTH  22
 
 class Arduino {
  public:

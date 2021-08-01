@@ -49,13 +49,14 @@
 // -- Arduino Commands
 #define ARD_CMD_SET_BONE    20
 #define ARD_CMD_SET_FOV     21
+#define ARD_CMD_SET_SMOOTH  22
 
 // Menu pages
-#define MENU_PAGE_WH       0
-#define MENU_PAGE_BHOP     1
-#define MENU_PAGE_TRIGGER  2
-#define MENU_PAGE_AIM      3
-#define MENU_PAGE_MAX      4
+#define MENU_PAGE_BHOP     0
+#define MENU_PAGE_TRIGGER  1
+#define MENU_PAGE_AIM      2
+#define MENU_PAGE_MAX      3
+#define MENU_PAGE_WH       4  // Not yet implemented
 
 // WallHack modes
 #define WH_MODE_NEAREST 0
@@ -89,7 +90,8 @@
 #define AIM_PAGE_STATE  0
 #define AIM_PAGE_BONE   1
 #define AIM_PAGE_FOV    2
-#define AIM_PAGE_MAX    3
+#define AIM_PAGE_SMOOTH 3
+#define AIM_PAGE_MAX    4
 
 // AimBot states
 #define AIM_OFF 0
@@ -113,6 +115,7 @@
 #define AIM_STATE_ADDR      4  // (size - 1 byte)
 #define AIM_BONE_ADDR       5  // (size - 1 byte)
 #define AIM_FOV_ADDR        6  // (size - 4 bytes)
+#define AIM_SMOOTH_ADDR     10  // (size - 4 bytes)
 
 // Limits
 #define MAX_MOUSE_MOVE_LENGTH 127
