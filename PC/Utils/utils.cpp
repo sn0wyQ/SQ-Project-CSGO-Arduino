@@ -59,6 +59,7 @@ std::pair<char, char> Utils::AngleDiffToMouseDelta(
   } else if (distance > 256.f) {
     speed *= 0.75f;
   }
+  speed /= Global::aim_bot_smooth;
 
   float sensitivity = local_player.GetSensitivity();
   float coef = speed / sensitivity;

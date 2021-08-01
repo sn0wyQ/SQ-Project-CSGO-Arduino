@@ -22,7 +22,7 @@ bool is_blinking = false;
 uint8_t blink_col = 0;
 uint8_t blink_row = 0;
 
-byte menu_page = MENU_PAGE_WH;
+byte menu_page = MENU_PAGE_BHOP;
 
 byte wh_mode = WH_MODE_NEAREST;
 byte wh_page = WH_PAGE_POS;
@@ -39,6 +39,7 @@ byte aim_bot_page = AIM_PAGE_STATE;
 byte aim_bot_state = AIM_OFF;
 byte aim_bot_bone = AIM_BONE_HEAD;
 float aim_bot_fov = 5.f;
+float aim_bot_smooth = 1.f;
 
 }  // namespace Global
 

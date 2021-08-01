@@ -169,6 +169,15 @@ void Arduino::CheckArduinoOutput() {
         break;
       }
 
+      case ARD_CMD_SET_SMOOTH: {
+        float new_smooth;
+        if (Arduino::Read32Bits(&new_smooth)) {
+          Global::aim_bot_smooth = new_smooth;
+          Utils::Log("[AIM BOT] Set smooth to %", Global::aim_bot_smooth);
+        }
+        break;
+      }
+
       default: {
         Utils::Log("[ARDUINO] Error: Output \"%\" can not be recognized as "
                    "a valid response", output);

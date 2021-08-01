@@ -47,7 +47,7 @@ void loop() {
       }
 
       case CMD_AIM: {
-        // We must read |delta_x| and |delta_y|!
+        // We must always read |delta_x| and |delta_y|!
         // (Else they will be read as command)
         char delta_x = static_cast<char>(Serial.read());
         char delta_y = static_cast<char>(Serial.read());
@@ -60,6 +60,7 @@ void loop() {
       case CMD_UPDATE: {
         Utils::SendResponse(ARD_CMD_SET_BONE, Global::aim_bot_bone);
         Utils::SendResponse32(ARD_CMD_SET_FOV, Global::aim_bot_fov);
+        Utils::SendResponse32(ARD_CMD_SET_SMOOTH, Global::aim_bot_smooth);
         break;
       }
 
